@@ -1,7 +1,11 @@
 /* GLOBAL */
-@import "./common/variables.scss";
-@import "./common/global.scss";
-@import "./common/fonts.scss";
+@import "./common/variables";
+@import "./common/global";
+@import "./common/fonts";
 
 /* BLOCKS */
-@import "./blocks/header.scss";
+@import "./blocks/body";
+@import "./blocks/container";
+@import "./blocks/interaction";
+@import "./blocks/inputs";
+@import "./blocks/buttons";

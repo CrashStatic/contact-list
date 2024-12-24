@@ -1,0 +1,22 @@
+.inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.inputs__wrapper {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputs__label {
+  font-size: 14px;
+}
+
+.inputs__input {
+  font-size: 16px;
+  margin: 0;
+  padding: 6px;
+}
