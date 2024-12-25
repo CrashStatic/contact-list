@@ -48,7 +48,11 @@
   <!-- Шаблон буквы -->
   <template id="letter">
     <div class="column__element element">
-      <div data-id="a" class="element__letter">A</div>
+      <div class="element__container">
+        <div data-id="a" class="element__letter">A</div>
+        <span class="element__counter">0</span> <!-- Добавляем счётчик -->
+      </div>
+      <div class="element__contacts"></div> <!-- Контейнер для контактов -->
     </div>
   </template>
 

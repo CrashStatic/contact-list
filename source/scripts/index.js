@@ -2,80 +2,140 @@
 import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
 
-const containerLeft = document.querySelector('.column__left');
-const containerRight = document.querySelector('.column__right');
-
 document.addEventListener('DOMContentLoaded', () => {
+  const containerLeft = document.querySelector('.column__left');
+  const containerRight = document.querySelector('.column__right');
+
+
   createColumn(ALPHABET_A_M, containerLeft);
   createColumn(ALPHABET_N_Z, containerRight);
-  // updateAddressBook();
+
+
+  // Селекторы элементов
+  const nameInput = document.getElementById('name');
+  const positionInput = document.getElementById('position');
+  const phoneInput = document.getElementById('phone');
+  const addButton = document.querySelector('.buttons__button--add');
+  const clearButton = document.querySelector('.buttons__button--clear');
+
+  // Шаблон контакта
+  const letterTemplate = document.querySelector('#message').content.querySelector('.message');
+
+  // Функция создания контакта
+  const getContactElement = (name, position, phone) => {
+    const contactElement = letterTemplate.cloneNode(true);
+    contactElement.querySelector('.message__name').textContent = name;
+    contactElement.querySelector('.message__position').textContent = position;
+    contactElement.querySelector('.message__phone').textContent = phone;
+    return contactElement;
+  };
+
+  // Функция добавления контакта в нужную колонку
+  const addContactToColumn = (contactElement, firstLetter) => {
+    // Определяем, куда добавить букву
+    const targetContainer =
+      ALPHABET_A_M.some((item) => item.letter === firstLetter)
+        ? containerLeft
+        : containerRight;
+
+    // Ищем соответствующую букву
+    const letterContainer = [...targetContainer.children].find(
+      (child) => child.querySelector('.element__letter').dataset.id === firstLetter.toLowerCase()
+    );
+
+    if (letterContainer) {
+      const contactsContainer = letterContainer.querySelector('.element__contacts');
+      contactsContainer.append(contactElement); // Добавляем контакт
+
+      updateCounter(letterContainer); // Обновляем счётчик
+    } else {
+      alert(`Буква "${firstLetter}" не найдена в таблице.`);
+    }
+  };
+
+  // Обработчик для кнопки ADD
+  addButton.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const name = nameInput.value.trim();
+    const position = positionInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+    if (!name || !position || !phone) {
+      alert('Заполните все поля');
+      return;
+    }
+
+    const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
+    const contactElement = getContactElement(name, position, phone); // Создаём контакт
+
+    addContactToColumn(contactElement, firstLetter); // Добавляем контакт под нужную букву
+
+    // Очищаем поля ввода
+    nameInput.value = '';
+    positionInput.value = '';
+    phoneInput.value = '';
+  });
+
+  // Функция для обновления счётчика
+  function updateCounter(letterContainer) {
+    const counterElement = letterContainer.querySelector('.element__counter');
+    const contactsContainer = letterContainer.querySelector('.element__contacts');
+    const count = contactsContainer.children.length; // Количество контактов
+    if (count > 0) {
+      counterElement.classList.add('element__counter--active');
+      counterElement.textContent = count;
+    }
+  }
+
+  // Раскрывающееся меню с контактами при клике на букву
+  const letterElements = document.querySelectorAll('.element__container');
+
+  letterElements.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const currentBtn = e.target.closest('.element');
+      const currentContent = currentBtn.querySelector('.element__contacts');
+
+      currentContent.classList.toggle('element__contacts--open');
+
+      if (currentContent.classList.contains('element__contacts--open')) {
+        currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
+      } else {
+        currentContent.style.maxHeight = 0;
+      }
+    });
+  });
+
+  // document.querySelectorAll('.element__container').forEach((container) => {
+  //   container.addEventListener('click', () => {
+  //     const parentElement = container.closest('.column__element');
+  //     const contacts = parentElement.querySelector('.element__contacts');
+
+  //     // Переключаем класс
+  //     contacts.classList.toggle('element__contacts--open');
+
+  //     // Управляем высотой
+  //     if (contacts.classList.contains('element__contacts--open')) {
+  //       contacts.style.maxHeight = `${contacts.scrollHeight}px`;
+  //     } else {
+  //       contacts.style.maxHeight = 0;
+  //     }
+  //   });
+  // });
+
 });
 
-// Селекторы элементов
-const nameInput = document.getElementById('name');
-const positionInput = document.getElementById('position');
-const phoneInput = document.getElementById('phone');
-const addButton = document.querySelector('.buttons__button--add');
-const clearButton = document.querySelector('.buttons__button--clear');
-
-// Шаблон контакта
-const letterTemplate = document.querySelector('#message').content.querySelector('.message');
-
-// Функция создания контакта
-const getContactElement = (name, position, phone) => {
-  const contactElement = letterTemplate.cloneNode(true);
-  contactElement.querySelector('.message__name').textContent = name;
-  contactElement.querySelector('.message__position').textContent = position;
-  contactElement.querySelector('.message__phone').textContent = phone;
-  return contactElement;
-};
-
-// Функция добавления контакта в нужную колонку
-const addContactToColumn = (contactElement, firstLetter) => {
-  // Определяем, куда добавить букву
-  const targetContainer =
-    ALPHABET_A_M.some((item) => item.letter === firstLetter)
-      ? containerLeft
-      : containerRight;
-
-  // Ищем соответствующую букву
-  const letterContainer = [...targetContainer.children].find(
-    (child) => child.querySelector('.element__letter').dataset.id === firstLetter.toLowerCase()
-  );
-
-  if (letterContainer) {
-    letterContainer.append(contactElement);
-  } else {
-    alert(`Буква "${firstLetter}" не найдена в таблице.`);
-  }
-};
-
-// Обработчик для кнопки ADD
-addButton.addEventListener('click', (e) => {
-  e.preventDefault();
-
-  const name = nameInput.value.trim();
-  const position = positionInput.value.trim();
-  const phone = phoneInput.value.trim();
-
-  if (!name || !position || !phone) {
-    alert('Заполните все поля');
-    return;
-  }
-
-  const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
-  const contactElement = getContactElement(name, position, phone); // Создаём контакт
-
-  addContactToColumn(contactElement, firstLetter); // Добавляем контакт под нужную букву
-
-  // Очищаем поля ввода
-  nameInput.value = '';
-  positionInput.value = '';
-  phoneInput.value = '';
-});
 
 
 
+// Функция очищения всего списка
+// clearButton.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   containerLeft.querySelector('.element__contacts').remove();
+//   containerRight.querySelector('.element__contacts').remove();
+// });
 
 // document.querySelector('.buttons__button--add').addEventListener('click', () => {
 //   let contact = new Object();

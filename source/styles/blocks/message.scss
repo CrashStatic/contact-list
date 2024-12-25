@@ -1,5 +1,6 @@
 .message {
-  display: none;
+  // display: none;
+  display: block;
   font-size: 15px;
   width: 100%;
   padding: 5px 10px;
@@ -12,6 +13,6 @@
   }
 }
 
-.message--open {
-  display: block;
-}
+// .message--open {
+//   display: block;
+// }

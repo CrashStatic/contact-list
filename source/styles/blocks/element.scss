@@ -1,4 +1,6 @@
 .element {
+  display: flex;
+  flex-direction: column;
   width: 250px;
   background-color: #efbae2;
   border: 1px solid #8c8181;
@@ -15,7 +17,33 @@
   }
 }
 
+.element__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
 .element__letter {
   font-weight: 800;
-  padding: 10px;
+}
+
+.element__counter {
+  display: none;
+  font-weight: 800;
+
+  &--active {
+    display: block;
+  }
+}
+
+.element__contacts {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+}
+
+.element__contacts--open {
+  max-height: auto;
 }
