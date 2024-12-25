@@ -59,15 +59,18 @@
   <!-- Шаблон сообщения -->
   <template id="message">
     <div class="element__message message">
-      <div>Name:
-        <span class="message__name"></span>
+      <div class="message__info">
+        <div>Name:
+          <span class="message__name"></span>
+        </div>
+        <div>Position:
+          <span class="message__position"></span>
+        </div>
+        <div>Phone:
+          <span class="message__phone"></span>
+        </div>
       </div>
-      <div>Position:
-        <span class="message__position"></span>
-      </div>
-      <div>Phone:
-        <span class="message__phone"></span>
-      </div>
+      <button class="message__delete" type="button" aria-label="Delete"></button>
     </div>
   </template>
 </body>

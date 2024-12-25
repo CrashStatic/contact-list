@@ -6,17 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const containerLeft = document.querySelector('.column__left');
   const containerRight = document.querySelector('.column__right');
 
-
   createColumn(ALPHABET_A_M, containerLeft);
   createColumn(ALPHABET_N_Z, containerRight);
-
 
   // Селекторы элементов
   const nameInput = document.getElementById('name');
   const positionInput = document.getElementById('position');
   const phoneInput = document.getElementById('phone');
   const addButton = document.querySelector('.buttons__button--add');
-  const clearButton = document.querySelector('.buttons__button--clear');
 
   // Шаблон контакта
   const letterTemplate = document.querySelector('#message').content.querySelector('.message');
@@ -29,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     contactElement.querySelector('.message__phone').textContent = phone;
     return contactElement;
   };
+
 
   // Функция добавления контакта в нужную колонку
   const addContactToColumn = (contactElement, firstLetter) => {
@@ -52,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(`Буква "${firstLetter}" не найдена в таблице.`);
     }
   };
+
 
   // Обработчик для кнопки ADD
   addButton.addEventListener('click', (e) => {
@@ -77,16 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     phoneInput.value = '';
   });
 
-  // Функция для обновления счётчика
-  function updateCounter(letterContainer) {
-    const counterElement = letterContainer.querySelector('.element__counter');
-    const contactsContainer = letterContainer.querySelector('.element__contacts');
-    const count = contactsContainer.children.length; // Количество контактов
-    if (count > 0) {
-      counterElement.classList.add('element__counter--active');
-      counterElement.textContent = count;
-    }
-  }
 
   // Раскрывающееся меню с контактами при клике на букву
   const letterElements = document.querySelectorAll('.element__container');
@@ -108,26 +97,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // document.querySelectorAll('.element__container').forEach((container) => {
-  //   container.addEventListener('click', () => {
-  //     const parentElement = container.closest('.column__element');
-  //     const contacts = parentElement.querySelector('.element__contacts');
 
-  //     // Переключаем класс
-  //     contacts.classList.toggle('element__contacts--open');
+  // Функция для обновления счётчика
+  function updateCounter(letterContainer) {
+    const counterElement = letterContainer.querySelector('.element__counter');
+    const contactsContainer = letterContainer.querySelector('.element__contacts');
+    const count = contactsContainer.children.length; // Количество контактов
+    if (count > 0) {
+      counterElement.classList.add('element__counter--active');
+      counterElement.textContent = count;
+    } else {
+      counterElement.classList.remove('element__counter--active');
+      counterElement.textContent = 0;
+    }
+  }
 
-  //     // Управляем высотой
-  //     if (contacts.classList.contains('element__contacts--open')) {
-  //       contacts.style.maxHeight = `${contacts.scrollHeight}px`;
-  //     } else {
-  //       contacts.style.maxHeight = 0;
-  //     }
-  //   });
-  // });
 
+  // Функция удвления контакта из списка
+  const handleDeleteContact = (event) => {
+    const deleteButton = event.target.closest('.message__delete');
+    if (!deleteButton) {
+      return;
+    }
+
+    const contactMessage = deleteButton.closest('.element__message');
+    const letterElement = deleteButton.closest('.column__element');
+
+    if (contactMessage && letterElement) {
+      contactMessage.remove(); // Удаляем сообщение из DOM
+      updateCounter(letterElement); // Обновляем счётчик для буквы
+    }
+  };
+
+  // Вешаем обработчик событий на весь документ для динамических элементов
+  document.addEventListener('click', handleDeleteContact);
+
+
+  // Функция очищения всего списка
+  const clearButton = document.querySelector('.buttons__button--clear');
+
+  const clearAllContacts = () => {
+    document.querySelectorAll('.column__element').forEach((letterElement) => {
+      const contactsContainer = letterElement.querySelector('.element__contacts');
+
+      // Удаляем все контакты
+      contactsContainer.innerHTML = '';
+
+      // Обновляем счётчик
+      const counter = letterElement.querySelector('.element__counter');
+      counter.classList.remove('element__counter--active');
+      counter.textContent = '0';
+    });
+  };
+
+  // Обработчик на кнопку Clear List
+  clearButton.addEventListener('click', clearAllContacts);
 });
-
-
 
 
 // Функция очищения всего списка
