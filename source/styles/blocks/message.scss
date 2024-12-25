@@ -1,0 +1,17 @@
+.message {
+  display: none;
+  font-size: 15px;
+  width: 100%;
+  padding: 5px 10px;
+  background-color: #e1a8f2;
+  border-top: 1px solid #ff237e;
+  border-bottom: 1px solid #ff237e;
+
+  & + .message {
+    border-top: none;
+  }
+}
+
+.message--open {
+  display: block;
+}

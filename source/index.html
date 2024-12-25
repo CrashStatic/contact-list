@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <title>Contact List</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="preload" href="#" type="font/woff2" as="font">
+  <link rel="preload" href="fonts/montserrat/Montserrat-Medium.woff2" type="font/woff2" as="font"  crossorigin="anonymous">
+  <link rel="preload" href="fonts/montserrat/Montserrat-Bold.woff2" type="font/woff2" as="font"  crossorigin="anonymous">
   <link rel="stylesheet" href="styles/styles.css">
   <script src="scripts/index.js" defer></script>
 </head>
@@ -44,10 +45,25 @@
     </section>
   </div>
 
-  <!-- Шаблон изображения случайного пользователя -->
+  <!-- Шаблон буквы -->
   <template id="letter">
     <div class="column__element element">
       <div data-id="a" class="element__letter">A</div>
+    </div>
+  </template>
+
+  <!-- Шаблон сообщения -->
+  <template id="message">
+    <div class="element__message message">
+      <div>Name:
+        <span class="message__name"></span>
+      </div>
+      <div>Position:
+        <span class="message__position"></span>
+      </div>
+      <div>Phone:
+        <span class="message__phone"></span>
+      </div>
     </div>
   </template>
 </body>

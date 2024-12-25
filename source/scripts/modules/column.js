@@ -1,7 +1,5 @@
-import { ALPHABET_A_M, ALPHABET_N_Z } from './mock';
+// import { ALPHABET_A_M, ALPHABET_N_Z } from './mock';
 
-const containerLeft = document.querySelector('.column__left');
-const containerRight = document.querySelector('.column__right');
 const letterTemplate = document.querySelector('#letter').content.querySelector('.element');
 
 const getLetter = ({ letter, id }) => {
@@ -23,5 +21,7 @@ const createColumn = (alphabet, container) => {
   container.append(fragmentElement);
 };
 
-createColumn(ALPHABET_A_M, containerLeft);
-createColumn(ALPHABET_N_Z, containerRight);
+// createColumn(ALPHABET_A_M, containerLeft);
+// createColumn(ALPHABET_N_Z, containerRight);
+
+export { createColumn };
