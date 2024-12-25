@@ -13,4 +13,13 @@
   padding: 5px;
   min-width: 100px;
   cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #f0abdf;
+  }
+
+  &:focus {
+    outline: none;
+  }
 }

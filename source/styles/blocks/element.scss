@@ -1,0 +1,21 @@
+.element {
+  width: 250px;
+  padding: 10px;
+  background-color: #efbae2;
+  border: 1px solid #8c8181;
+  border-bottom: none;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #eca0d9;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.element__letter {
+  font-weight: 800;
+}
