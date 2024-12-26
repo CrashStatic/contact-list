@@ -15,17 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
   const addButton = document.querySelector('.buttons__button--add');
 
-  const contactsStorage = new Set(); // Хранилище контактов
+  const contactsStorage = new Map(); // Хранилище контактов
 
   // Проверка на существование контакта
   function isContactExist(name, position, phone) {
-    let notExists = true;
-    for (let contact of contactsStorage.keys()) {
-      if (contact.name === name && contact.position === position && contact.phone === phone) {
-        notExists = false;
-      }
-    }
-    return notExists;
+    return contactsStorage.has(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
   }
 
 
@@ -40,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 
-  // Добавление контакта
+  // Добавление контакта в DOM и запись в хранилище
   const addContactToStorage = (name, position, phone, letterElement) => {
 
     // Заполняем контакт
@@ -50,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactsContainer = letterElement.querySelector('.element__contacts');
     contactsContainer.append(contactElement); // Добавляем контакт
     updateCounter(letterElement); // Обновляем счётчик
+
+    // Сохраняем контакт в хранилище
+    contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
   };
 
 
@@ -66,12 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (!isContactExist(name, position, phone)) {
+    if (isContactExist(name, position, phone)) {
       alert('Этот контакт уже записан!');
       return;
-    } else {
-      // Сохраняем контакт в хранилище
-      contactsStorage.add({name, position, phone});
     }
 
     const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
@@ -162,30 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Обработчик на кнопку Clear List
   clearButton.addEventListener('click', clearAllContacts);
 });
-
-
-// Функция очищения всего списка
-// clearButton.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   containerLeft.querySelector('.element__contacts').remove();
-//   containerRight.querySelector('.element__contacts').remove();
-// });
-
-// document.querySelector('.buttons__button--add').addEventListener('click', () => {
-//   let contact = new Object();
-//   let nameInput = document.querySelector('#name');
-//   let vacancyInput = document.querySelector('#position');
-//   let phoneInput = document.querySelector('#phone');
-
-//   //If all inputs not empty, creating new object, else - printing error ang highlights incorrect inputs
-//   contact.name = nameInput.value.trim();
-//   contact.vacancy = vacancyInput.value.trim();
-//   contact.phone = phoneInput.value.trim();
-
-//   //getting first letter of name - will be key of object array - adding to table, list
-//   let firstLetter = nameInput.value.trim()[0].toLowerCase();
-//   addToTable(contact, firstLetter);
-// });
 
 
 // let contactSet = new Set();
