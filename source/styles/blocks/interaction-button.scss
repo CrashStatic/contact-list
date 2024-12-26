@@ -1,0 +1,28 @@
+.interaction-button {
+  display: block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  background-color: #efbae2;
+  border: 1px solid #a49898;
+  cursor: pointer;
+
+  &::before {
+    content: 'x';
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: #f0abdf;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

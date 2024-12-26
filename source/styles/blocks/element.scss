@@ -5,6 +5,13 @@
   background-color: #efbae2;
   border: 1px solid #8c8181;
   border-bottom: none;
+}
+
+.element__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
   cursor: pointer;
 
   &:hover,
@@ -17,12 +24,15 @@
   }
 }
 
-.element__container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px;
+.element__container:has(>.element__counter--active) {
+  background-color: #e5aff5;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #eca0d9;
+  }
 }
+
 
 .element__letter {
   font-weight: 800;

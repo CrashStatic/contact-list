@@ -105,7 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateCounter(letterContainer) {
     const counterElement = letterContainer.querySelector('.element__counter');
     const contactsContainer = letterContainer.querySelector('.element__contacts');
+
     const count = contactsContainer.children.length; // Количество контактов
+
     if (count > 0) {
       counterElement.classList.add('element__counter--active');
       counterElement.textContent = count;
@@ -153,9 +155,94 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+
+  // Элементы попапа
+  const editPopup = document.querySelector('#edit-popup');
+  const popupNameInput = editPopup.querySelector('.popup__input--name');
+  const popupPositionInput = editPopup.querySelector('.popup__input--position');
+  const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
+  const saveButton = editPopup.querySelector('.popup__button-save');
+  const cancelButton = editPopup.querySelector('.popup__button-cancel');
+  const overlay = document.querySelector('.popup__overlay');
+
+  let currentContactElement = null; // Контакт, который редактируется
+
+  // Открытие попапа
+  function openEditPopup(contactElement) {
+    currentContactElement = contactElement;
+
+    // Заполняем поля попапа текущими данными контакта
+    popupNameInput.value = contactElement.querySelector('.message__name').textContent;
+    popupPositionInput.value = contactElement.querySelector('.message__position').textContent;
+    popupPhoneInput.value = contactElement.querySelector('.message__phone').textContent;
+
+    editPopup.classList.add('popup--open');
+  }
+
+  // Закрытие попапа
+  function closeEditPopup() {
+    editPopup.classList.remove('popup--open');
+    currentContactElement = null;
+  }
+
+  // Сохранение изменений
+  saveButton.addEventListener('click', () => {
+    const newName = popupNameInput.value.trim();
+    const newPosition = popupPositionInput.value.trim();
+    const newPhone = popupPhoneInput.value.trim();
+
+    if (!newName || !newPosition || !newPhone) {
+      alert('Заполните все поля');
+      return;
+    }
+
+    const oldName = currentContactElement.querySelector('.message__name').textContent;
+    const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
+
+    // Проверяем уникальность контакта
+    if (
+      (newName !== oldName || newPhone !== oldPhone) &&
+      isContactExist(newName, newPosition, newPhone)
+    ) {
+      alert('Этот контакт уже записан!');
+      return;
+    }
+
+    // Удаляем старый контакт из хранилища
+    contactsStorage.delete(`${oldName.toLowerCase()}|${oldPhone}`);
+
+    // Обновляем контакт в хранилище
+    contactsStorage.set({ name: newName, position: newPosition, phone: newPhone });
+
+    // Обновляем данные в DOM
+    currentContactElement.querySelector('.message__name').textContent = newName;
+    currentContactElement.querySelector('.message__position').textContent = newPosition;
+    currentContactElement.querySelector('.message__phone').textContent = newPhone;
+
+    closeEditPopup();
+  });
+
+  // Закрытие попапа по клику на свободную область
+  overlay.addEventListener('click', closeEditPopup);
+
+  // Отмена редактирования
+  cancelButton.addEventListener('click', closeEditPopup);
+
+  // Добавляем обработчик на кнопку "Edit"
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('message__edit')) {
+      const contactElement = e.target.closest('.message');
+      openEditPopup(contactElement);
+    }
+  });
+
+
   // Обработчик на кнопку Clear List
   clearButton.addEventListener('click', clearAllContacts);
 });
+
+
+
 
 
 // let contactSet = new Set();

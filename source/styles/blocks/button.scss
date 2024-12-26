@@ -1,0 +1,19 @@
+.button {
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-weight: 500;
+  background-color: #d3bcef;
+  border-radius: 5px;
+  border: 2px solid #9568cf;
+  padding: 5px;
+  min-width: 100px;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #f0abdf;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

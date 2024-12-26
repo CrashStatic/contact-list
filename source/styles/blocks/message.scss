@@ -5,7 +5,7 @@
   font-size: 15px;
   width: 100%;
   padding: 5px 10px;
-  background-color: #e1a8f2;
+  background-color: #e5aff5;
   border-top: 1px solid #ff237e;
   border-bottom: 1px solid #ff237e;
 
@@ -14,17 +14,13 @@
   }
 }
 
-.message__delete {
-  display: block;
-  width: 20px;
-  height: 20px;
-  position: relative;
-  background-color: #efbae2;
-  border: 1px solid #a49898;
-  cursor: pointer;
-
+.message__edit {
   &::before {
-    content: 'x';
+    content: '';
+    background-image: url('../../images/pencil.png');
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 16px;
     height: 16px;
     position: absolute;
@@ -32,4 +28,11 @@
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
+}
+
+.message__buttons {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
 }
