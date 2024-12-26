@@ -17,6 +17,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const contactsStorage = new Map(); // Хранилище контактов
 
+  // Загрузка контактов из localStorage
+  function loadContactsFromLocalStorage() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      try {
+        const contacts = JSON.parse(savedContacts); // Преобразуем строку в массив
+        if (Array.isArray(contacts)) {
+          contacts.forEach(({ name, position, phone }) => {
+            const firstLetter = name[0].toUpperCase();
+            const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+            if (letterElement) {
+              addContactToStorage(name, position, phone, letterElement);
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Ошибка парсинга данных из localStorage:', error);
+      }
+    }
+  }
+
+  // Сохранение контактов в localStorage
+  function saveContactsToLocalStorage() {
+    const contactsArray = Array.from(contactsStorage.values());
+    localStorage.setItem('contacts', JSON.stringify(contactsArray));
+  }
+
   // Проверка на существование контакта
   function isContactExist(name, position, phone) {
     return contactsStorage.has(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
@@ -35,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Добавление контакта в DOM и запись в хранилище
-  const addContactToStorage = (name, position, phone, letterElement) => {
+  function addContactToStorage(name, position, phone, letterElement, saveToLocal = true) {
 
     // Заполняем контакт
     const contactElement = getContactElement(name, position, phone);
@@ -43,11 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Добавляем контакт в DOM
     const contactsContainer = letterElement.querySelector('.element__contacts');
     contactsContainer.append(contactElement); // Добавляем контакт
-    updateCounter(letterElement); // Обновляем счётчик
+
+    // Обновляем счётчик
+    updateCounter(letterElement);
 
     // Сохраняем контакт в хранилище
     contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
-  };
+
+    // Сохраняем в localStorage, если нужно
+    if (saveToLocal) {
+      saveContactsToLocalStorage();
+    }
+  }
 
 
   // Обработчик для кнопки ADD
@@ -129,8 +163,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterElement = deleteButton.closest('.column__element');
 
     if (contactMessage && letterElement) {
-      contactMessage.remove(); // Удаляем сообщение из DOM
-      updateCounter(letterElement); // Обновляем счётчик для буквы
+      const name = contactMessage.querySelector('.message__name').textContent;
+      const position = contactMessage.querySelector('.message__position').textContent;
+      const phone = contactMessage.querySelector('.message__phone').textContent;
+
+      // Удаляем из DOM
+      contactMessage.remove();
+
+      // Удаляем из хранилища
+      contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+
+      // Обновляем данные в localStorage
+      saveContactsToLocalStorage();
+
+      // Обновляем счётчик для буквы
+      updateCounter(letterElement);
     }
   };
 
@@ -153,8 +200,17 @@ document.addEventListener('DOMContentLoaded', () => {
       counter.classList.remove('element__counter--active');
       counter.textContent = '0';
     });
+
+    // Очищаем хранилище
+    contactsStorage.clear();
+    // localStorage.removeItem('contacts');
+
+    // Обновляем данные в localStorage
+    saveContactsToLocalStorage();
   };
 
+  // Загрузка контактов при старте
+  loadContactsFromLocalStorage();
 
   // Элементы попапа
   const editPopup = document.querySelector('#edit-popup');
@@ -197,11 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const oldName = currentContactElement.querySelector('.message__name').textContent;
+    const oldPosition = currentContactElement.querySelector('.message__position').textContent;
     const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
 
     // Проверяем уникальность контакта
     if (
-      (newName !== oldName || newPhone !== oldPhone) &&
+      (newName !== oldName || newPosition !== oldPosition || newPhone !== oldPhone) &&
       isContactExist(newName, newPosition, newPhone)
     ) {
       alert('Этот контакт уже записан!');
@@ -209,15 +266,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Удаляем старый контакт из хранилища
-    contactsStorage.delete(`${oldName.toLowerCase()}|${oldPhone}`);
+    contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
 
     // Обновляем контакт в хранилище
-    contactsStorage.set({ name: newName, position: newPosition, phone: newPhone });
+    contactsStorage.set(`${newName.toLowerCase()}|${newPosition.toLowerCase()}|${newPhone}`, { name: newName, position: newPosition, phone: newPhone });
 
     // Обновляем данные в DOM
     currentContactElement.querySelector('.message__name').textContent = newName;
     currentContactElement.querySelector('.message__position').textContent = newPosition;
     currentContactElement.querySelector('.message__phone').textContent = newPhone;
+
+    // Сохраняем изменения в localStorage
+    saveContactsToLocalStorage();
 
     closeEditPopup();
   });
@@ -240,9 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Обработчик на кнопку Clear List
   clearButton.addEventListener('click', clearAllContacts);
 });
-
-
-
 
 
 // let contactSet = new Set();
