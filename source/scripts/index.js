@@ -15,11 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
   const addButton = document.querySelector('.buttons__button--add');
 
-  // Шаблон контакта
-  const letterTemplate = document.querySelector('#message').content.querySelector('.message');
+  const contactsStorage = new Set(); // Хранилище контактов
+
+  // Проверка на существование контакта
+  // const isContactExist = (name, phone, position) => contactsStorage.some(
+  //   (contact) => contact.name.toLowerCase() === name.toLowerCase() && contact.phone === phone && contact.position.toLowerCase() === position.toLowerCase());
+
+
+  function isContactExist(name, position, phone) {
+    let notExists = true;
+    for (let contact of contactsStorage.keys()) {
+      if (contact.name === name && contact.position === position && contact.phone === phone) {
+        notExists = false;
+      }
+    }
+    return notExists;
+  }
+  // const isContactExist = (name, phone, position) => contactsStorage.some(
+  //   (contact) => contact.name.toLowerCase() === name.toLowerCase() && contact.phone === phone && contact.position.toLowerCase() === position.toLowerCase());
 
   // Функция создания контакта
   const getContactElement = (name, position, phone) => {
+    const letterTemplate = document.querySelector('#message').content.querySelector('.message');
     const contactElement = letterTemplate.cloneNode(true);
     contactElement.querySelector('.message__name').textContent = name;
     contactElement.querySelector('.message__position').textContent = position;
@@ -27,28 +44,62 @@ document.addEventListener('DOMContentLoaded', () => {
     return contactElement;
   };
 
+  // function checkEqualsInGlobalSet(contact) {
+  //   let notEquals = true;
+  //   for (let contactE of contactsStorage.keys()) {
+  //     if (contactE.name === contact.name && contactE.vacancy === contact.vacancy && contactE.phone === contact.phone) {
+  //       notEquals = false;
+  //     }
+  //   }
+  //   return notEquals;
+  // }
 
-  // Функция добавления контакта в нужную колонку
-  const addContactToColumn = (contactElement, firstLetter) => {
-    // Определяем, куда добавить букву
-    const targetContainer =
-      ALPHABET_A_M.some((item) => item.letter === firstLetter)
-        ? containerLeft
-        : containerRight;
+  // // Функция добавления контакта в нужную колонку
+  // const addContactToColumn = (contactElement, firstLetter) => {
+  //   // Определяем, куда добавить букву
+  //   const targetContainer =
+  //     ALPHABET_A_M.some((item) => item.letter === firstLetter)
+  //       ? containerLeft
+  //       : containerRight;
 
-    // Ищем соответствующую букву
-    const letterContainer = [...targetContainer.children].find(
-      (child) => child.querySelector('.element__letter').dataset.id === firstLetter.toLowerCase()
-    );
+  //   // Ищем соответствующую букву
+  //   const letterContainer = [...targetContainer.children].find(
+  //     (child) => child.querySelector('.element__letter').dataset.id === firstLetter.toLowerCase()
+  //   );
 
-    if (letterContainer) {
-      const contactsContainer = letterContainer.querySelector('.element__contacts');
-      contactsContainer.append(contactElement); // Добавляем контакт
+  //   if (letterContainer) {
+  //     const contactsContainer = letterContainer.querySelector('.element__contacts');
+  //     contactsContainer.append(contactElement); // Добавляем контакт
+  //     updateCounter(letterContainer); // Обновляем счётчик
+  //   } else {
+  //     alert(`Буква "${firstLetter}" не найдена в таблице.`);
+  //   }
+  // };
 
-      updateCounter(letterContainer); // Обновляем счётчик
-    } else {
-      alert(`Буква "${firstLetter}" не найдена в таблице.`);
-    }
+  // Добавление контакта
+  const addContactToStorage = (name, position, phone, letterElement) => {
+    // const messageTemplate = document.querySelector('#message').content.querySelector('.element__message');
+    // const newContactElement = messageTemplate.cloneNode(true);
+
+    // // Заполняем контакт
+    // newContactElement.querySelector('.message__name').textContent = name;
+    // newContactElement.querySelector('.message__position').textContent = position;
+    // newContactElement.querySelector('.message__phone').textContent = phone;
+
+    // Заполняем контакт
+    const contactElement = getContactElement(name, position, phone);
+
+    // Добавляем контакт в DOM
+    const contactsContainer = letterElement.querySelector('.element__contacts');
+    contactsContainer.append(contactElement); // Добавляем контакт
+    updateCounter(letterElement); // Обновляем счётчик
+
+    // // Обновляем счётчик
+    // const counter = letterElement.querySelector('.element__counter');
+    // counter.textContent = contactsContainer.querySelectorAll('.element__message').length;
+
+    // // Сохраняем контакт в хранилище
+    // contactsStorage.add(contactElement);
   };
 
 
@@ -65,10 +116,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
-    const contactElement = getContactElement(name, position, phone); // Создаём контакт
+    // if (isContactExist(name, position, phone)) {
+    //   alert('Этот контакт уже записан!');
+    //   return;
+    // }
 
-    addContactToColumn(contactElement, firstLetter); // Добавляем контакт под нужную букву
+    // const contactElement = {name, position, phone};
+    if (!isContactExist(name, position, phone)) {
+      alert('Этот контакт уже записан!');
+      return;
+    } else {
+      // Сохраняем контакт в хранилище
+      contactsStorage.add({name, position, phone});
+    }
+
+    const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
+    const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+    // const contactElement = getContactElement(name, position, phone); // Создаём контакт
+
+    addContactToStorage(name, position, phone, letterElement);
+    // addContactToColumn(contactElement, firstLetter); // Добавляем контакт под нужную букву
 
     // Очищаем поля ввода
     nameInput.value = '';
