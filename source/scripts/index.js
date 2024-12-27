@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const contactMessage = deleteButton.closest('.message'); // Правильный класс
+    const contactMessage = deleteButton.closest('.message');
     const name = contactMessage.querySelector('.message__name').textContent;
     const position = contactMessage.querySelector('.message__position').textContent;
     const phone = contactMessage.querySelector('.message__phone').textContent;
@@ -218,9 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contactsContainer.innerHTML = '';
 
       // Обновляем счётчик
-      const counter = letterElement.querySelector('.element__counter');
-      counter.classList.remove('element__counter--active');
-      counter.textContent = '0';
+      updateCounter(letterElement);
     });
 
     // Очищаем хранилище
@@ -230,8 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
     saveContactsToLocalStorage();
   };
 
+  // Обработчик на кнопку Clear List
+  clearButton.addEventListener('click', clearAllContacts);
+
+
   // Загрузка контактов при старте
   loadContactsFromLocalStorage();
+
 
   // Элементы попапа
   const editPopup = document.querySelector('#edit-popup');
@@ -262,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentContactElement = null;
   }
 
-  // Сохранение изменений
+  // Сохранение изменений в попапе
   popupSaveButton.addEventListener('click', () => {
     const newName = popupNameInput.value.trim();
     const newPosition = popupPositionInput.value.trim();
@@ -351,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Открытие модального окна
   searchButton.addEventListener('click', () => {
     searchModal.classList.add('modal--open');
+    document.querySelector('.body').style.overflow = 'hidden';
   });
 
   // Функция поиска контактов
@@ -442,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchModal.classList.remove('modal--open');
     searchInput.value = '';
     searchArea.innerHTML = '';
+    document.querySelector('.body').style.overflow = 'auto';
   }
 
   // Обработчик на закрытие модального окна
@@ -449,8 +454,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Закрытие попапа по клику на свободную область
   searchOverlay.addEventListener('click', closeSearchModal);
-
-
-  // Обработчик на кнопку Clear List
-  clearButton.addEventListener('click', clearAllContacts);
 });
