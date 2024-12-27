@@ -159,25 +159,47 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const contactMessage = deleteButton.closest('.element__message');
-    const letterElement = deleteButton.closest('.column__element');
+    const contactMessage = deleteButton.closest('.message'); // Правильный класс
+    const name = contactMessage.querySelector('.message__name').textContent;
+    const position = contactMessage.querySelector('.message__position').textContent;
+    const phone = contactMessage.querySelector('.message__phone').textContent;
 
-    if (contactMessage && letterElement) {
-      const name = contactMessage.querySelector('.message__name').textContent;
-      const position = contactMessage.querySelector('.message__position').textContent;
-      const phone = contactMessage.querySelector('.message__phone').textContent;
+    // Удаляем из хранилища
+    contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+
+    if (contactMessage) {
 
       // Удаляем из DOM
       contactMessage.remove();
 
-      // Удаляем из хранилища
-      contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+      // Обновляем данные в основном списке
+      const firstLetter = name[0].toUpperCase();
+      const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+
+      if (letterElement) {
+        const contactsContainer = letterElement.querySelector('.element__contacts');
+        const contactElements = contactsContainer.querySelectorAll('.element__message');
+
+        contactElements.forEach((contact) => {
+          const contactName = contact.querySelector('.message__name').textContent;
+          const contactPosition = contact.querySelector('.message__position').textContent;
+          const contactPhone = contact.querySelector('.message__phone').textContent;
+
+          // Удаляем только нужный контакт
+          if (contactName === name && contactPosition === position && contactPhone === phone) {
+            contact.remove();
+          }
+        });
+
+        // Обновляем счётчик для буквы
+        updateCounter(letterElement);
+      }
+
+      // Удаляем контакт из модального окна
+      contactMessage.remove();
 
       // Обновляем данные в localStorage
       saveContactsToLocalStorage();
-
-      // Обновляем счётчик для буквы
-      updateCounter(letterElement);
     }
   };
 
@@ -203,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Очищаем хранилище
     contactsStorage.clear();
-    // localStorage.removeItem('contacts');
 
     // Обновляем данные в localStorage
     saveContactsToLocalStorage();
@@ -217,9 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const popupNameInput = editPopup.querySelector('.popup__input--name');
   const popupPositionInput = editPopup.querySelector('.popup__input--position');
   const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
-  const saveButton = editPopup.querySelector('.popup__button-save');
-  const cancelButton = editPopup.querySelector('.popup__button-cancel');
-  const overlay = document.querySelector('.popup__overlay');
+  const popupSaveButton = editPopup.querySelector('.popup__button-save');
+  const popupCancelButton = editPopup.querySelector('.popup__button-cancel');
+  const popupOverlay = document.querySelector('.popup__overlay');
 
   let currentContactElement = null; // Контакт, который редактируется
 
@@ -242,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Сохранение изменений
-  saveButton.addEventListener('click', () => {
+  popupSaveButton.addEventListener('click', () => {
     const newName = popupNameInput.value.trim();
     const newPosition = popupPositionInput.value.trim();
     const newPhone = popupPhoneInput.value.trim();
@@ -276,6 +297,28 @@ document.addEventListener('DOMContentLoaded', () => {
     currentContactElement.querySelector('.message__position').textContent = newPosition;
     currentContactElement.querySelector('.message__phone').textContent = newPhone;
 
+    // Обновляем данные в основном списке через взаимодействие в модальном окне
+    const firstLetter = oldName[0].toUpperCase();
+    const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+
+    if (letterElement) {
+      const contactsContainer = letterElement.querySelector('.element__contacts');
+      const contactElements = contactsContainer.querySelectorAll('.element__message');
+
+      contactElements.forEach((contact) => {
+        const contactName = contact.querySelector('.message__name').textContent;
+        const contactPosition = contact.querySelector('.message__position').textContent;
+        const contactPhone = contact.querySelector('.message__phone').textContent;
+
+        // Обновляем только нужный контакт
+        if (contactName === oldName && contactPosition === oldPosition && contactPhone === oldPhone) {
+          contact.querySelector('.message__name').textContent = newName;
+          contact.querySelector('.message__position').textContent = newPosition;
+          contact.querySelector('.message__phone').textContent = newPhone;
+        }
+      });
+    }
+
     // Сохраняем изменения в localStorage
     saveContactsToLocalStorage();
 
@@ -283,10 +326,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Закрытие попапа по клику на свободную область
-  overlay.addEventListener('click', closeEditPopup);
+  popupOverlay.addEventListener('click', closeEditPopup);
 
-  // Отмена редактирования
-  cancelButton.addEventListener('click', closeEditPopup);
+  // Отмена редактирования и закрытие попапа
+  popupCancelButton.addEventListener('click', closeEditPopup);
 
   // Добавляем обработчик на кнопку "Edit"
   document.addEventListener('click', (e) => {
@@ -296,302 +339,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Элементы модального окна поиска
+  const searchButton = document.querySelector('.buttons__button--search');
+  const searchModal = document.querySelector('.modal');
+  const searchInput = searchModal.querySelector('.modal__input');
+  const searchArea = searchModal.querySelector('.modal__search-area');
+  const searchCloseButton = searchModal.querySelector('.modal__button-cancel');
+  const searchOverlay = searchModal.querySelector('.modal__overlay');
+  const showAllButton = searchModal.querySelector('.modal__button-show');
+
+  // Открытие модального окна
+  searchButton.addEventListener('click', () => {
+    searchModal.classList.add('modal--open');
+  });
+
+  // Функция поиска контактов
+  function searchContacts(query) {
+    const results = [];
+    contactsStorage.forEach(({ name, position, phone }) => {
+      if (
+        name.toLowerCase().includes(query) ||
+        position.toLowerCase().includes(query) ||
+        phone.includes(query)
+      ) {
+        results.push({ name, position, phone });
+      }
+    });
+    return results;
+  }
+
+  // Отображение результатов поиска
+  function displaySearchResults(results) {
+    searchArea.innerHTML = ''; // Очищаем область результатов
+
+    if (results.length === 0) {
+      searchArea.textContent = 'No results found';
+      return;
+    }
+
+    results.forEach(({ name, position, phone }) => {
+      const contactElement = getContactElement(name, position, phone);
+      searchArea.appendChild(contactElement);
+    });
+  }
+
+  // Обработчик для ввода поиска
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    if (query) {
+      const results = searchContacts(query);
+      displaySearchResults(results);
+    } else {
+      searchArea.innerHTML = ''; // Очищаем, если строка поиска пуста
+    }
+  });
+
+  // Обработчик для кнопки Delete в модальном окне
+  searchArea.addEventListener('click', (event) => {
+    const deleteButton = event.target.closest('.message__delete');
+    if (deleteButton) {
+      const contactMessage = deleteButton.closest('.element__message');
+      if (contactMessage) {
+        const name = contactMessage.querySelector('.message__name').textContent;
+        const position = contactMessage.querySelector('.message__position').textContent;
+        const phone = contactMessage.querySelector('.message__phone').textContent;
+
+        // Удаляем из хранилища
+        contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+
+        // Удаляем из модального окна
+        contactMessage.remove();
+
+        // Обновляем основной список
+        const firstLetter = name[0].toUpperCase();
+        const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+        if (letterElement) {
+          updateCounter(letterElement);
+        }
+      }
+    }
+  });
+
+  // Обработчик для кнопки Edit в модальном окне
+  searchArea.addEventListener('click', (event) => {
+    const editButton = event.target.closest('.message__edit');
+    if (editButton) {
+      const contactElement = editButton.closest('.element__message');
+      if (contactElement) {
+        openEditPopup(contactElement);
+      }
+    }
+  });
+
+  // Обработчик для кнопки "Show All"
+  showAllButton.addEventListener('click', () => {
+    const allContacts = Array.from(contactsStorage.values());
+    displaySearchResults(allContacts);
+  });
+
+  // Функция закрытие модального окна поиска
+  function closeSearchModal() {
+    searchModal.classList.remove('modal--open');
+    searchInput.value = '';
+    searchArea.innerHTML = '';
+  }
+
+  // Обработчик на закрытие модального окна
+  searchCloseButton.addEventListener('click', closeSearchModal);
+
+  // Закрытие попапа по клику на свободную область
+  searchOverlay.addEventListener('click', closeSearchModal);
+
 
   // Обработчик на кнопку Clear List
   clearButton.addEventListener('click', clearAllContacts);
 });
-
-
-// let contactSet = new Set();
-// let letterContactsObj = {};
-
-// function addToTable(contact, firstLetter) {
-//   //Set list of all elements of contact list
-//   if (checkEqualsInGlobalSet(contact)) {
-//     contactSet.add(contact);
-//     //If object hasn't this property, creating array at this property
-//     if (!Object.prototype.hasOwnProperty.call(letterContactsObj, firstLetter)) {
-//       letterContactsObj[firstLetter] = new Array();
-//     }
-//     letterContactsObj[firstLetter].push(contact);
-//     // changeCounter(firstLetter);
-//     addInfoToLetter(firstLetter, contact);
-//   }
-// }
-
-// function checkEqualsInGlobalSet(contact) {
-//   let notEquals = true;
-//   for (let contactE of contactSet.keys()) {
-//       if (contactE.name == contact.name && contactE.vacancy == contact.vacancy && contactE.phone == contact.phone) {
-//           notEquals = false;
-//       }
-//   }
-//   return notEquals;
-// }
-
-// function addInfoToLetter(firstLetter, contact) {
-//   let letter = document.querySelector('.element__letter[data-id=' + firstLetter + ']');
-//   //Create and add contact's info to page
-//   for (let i = 1; i < letter.parentNode.children.length; i++) {
-//       letter.parentNode.children[i].classList.remove('letter__info_active');
-//   }
-//   let div = document.createElement('div');
-//   div.className = 'letter__info js-letter-info';
-//   div.innerText = `Name: ${contact.name}\n  Vacancy: ${contact.vacancy}\n  Phone: ${contact.phone}\n`;
-
-//   //Create and add window close symbol (button)
-//   let closeWindow = document.createElement('i');
-//   closeWindow.className = 'fa fa-window-close contact__delete js-delete-element';
-//   closeWindow.setAttribute('aria-hidden', true);
-//   letter.after(div);
-
-//   div.appendChild(closeWindow);
-// }
-
-
-// const getContactsFromLocalStorage = () => JSON.parse(localStorage.getItem('contacts')) || [];
-
-// const saveContactsToLocalStorage = (contact) => {
-//   localStorage.setItem('contacts', JSON.stringify(contact));
-// };
-
-// const contacts = getContactsFromLocalStorage();
-
-// const updateAddressBook = () => {
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   contacts.forEach((contact) => {
-//     const firstLetter = contact.name[0].toUpperCase();
-//     const targetColumn = firstLetter < 'N' ? containerLeft : containerRight;
-//     const letterElement = targetColumn.querySelector(`[data-id="${firstLetter}"]`);
-//     if (letterElement) {
-//       const contactDiv = document.createElement('div');
-//       contactDiv.textContent = `${contact.name}: ${contact.phone}`;
-//       letterElement.appendChild(contactDiv);
-//     }
-//   });
-// };
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   updateAddressBook();
-// });
-
-
-// document.querySelector('.buttons__button--add').addEventListener('submit', (event) => {
-//   event.preventDefault();
-//   const name = document.querySelector('#name').value;
-//   const phone = document.querySelector('#phone').value;
-//   const newContact = { name, phone };
-//   contacts.push(newContact);
-//   saveContactsToLocalStorage(contacts);
-//   document.querySelector('#name').value = '';
-//   document.querySelector('#phone').value = '';
-//   updateAddressBook();
-// });
-
-// const containerLeft = document.querySelector('.column__left');
-// const containerRight = document.querySelector('.column__right');
-// const addContactInput = document.querySelector('#name'); // Поле ввода имени контакта
-// const addContactButton = document.querySelector('.buttons__button--add'); // Кнопка добавления контакта
-
-
-// const getContactsFromLocalStorage = () => JSON.parse(localStorage.getItem('contact-table')) || [];
-
-// const saveContactsToLocalStorage = (contact) => {
-//   localStorage.setItem('contact-table', JSON.stringify(contact));
-// };
-
-// const contacts = getContactsFromLocalStorage();
-
-// const updateAddressBook = () => {
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-
-//   const sortedContacts = Object.keys(contacts).sort();
-//   const leftAlphabet = sortedContacts.filter((letter) => letter < 'N');
-//   const rightAlphabet = sortedContacts.filter((letter) => letter >= 'N');
-
-//   leftAlphabet.forEach((letter) => createColumn(contacts[letter], containerLeft));
-//   rightAlphabet.forEach((letter) => createColumn(contacts[letter], containerRight));
-// };
-
-// const updateAddressBook = () => {
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   contacts.forEach((contact) => {
-//     const firstLetter = contact.name[0].toUpperCase();
-//     const targetColumn = firstLetter < 'N' ? containerLeft : containerRight;
-//     const letterElement = targetColumn.querySelector(`[data-id="${firstLetter}"]`);
-//     if (letterElement) {
-//       const contactDiv = document.createElement('div');
-//       contactDiv.textContent = `${contact.name}: ${contact.phone}`;
-//       letterElement.appendChild(contactDiv);
-//     }
-//   });
-// };
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   updateAddressBook();
-// });
-
-
-// function updateAddressBook () {
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   contacts.forEach((contact) => {
-//     const firstLetter = contact.name[0].toUpperCase();
-//     const targetColumn = firstLetter < 'N' ? containerLeft : containerRight;
-//     const letterElement = targetColumn.querySelector(`[data-id="${firstLetter}"]`);
-//     if (letterElement) {
-//       const contactDiv = document.createElement('div');
-//       contactDiv.textContent = `${contact.name}: ${contact.phone}`;
-//       letterElement.appendChild(contactDiv);
-//     }
-//   });
-// };
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   createColumn(ALPHABET_A_M, containerLeft);
-//   createColumn(ALPHABET_N_Z, containerRight);
-//   updateAddressBook();
-// });
-
-// const addContact = () => {
-//   const contactName = addContactInput.value.trim();
-
-//   // if (contactName === '') {
-//   //   console.log('Имя контакта не может быть пустым!');
-//   //   return;
-//   // }
-
-//   const firstLetter = contactName[0].toUpperCase();
-
-//   if (!contacts[firstLetter]) {
-//     contacts[firstLetter] = [];
-//   }
-
-//   contacts[firstLetter].push({ letter: contactName, id: contacts[firstLetter].length + 1 });
-//   contacts[firstLetter].sort((a, b) => a.letter.localeCompare(b.letter));
-
-//   saveContactsToLocalStorage(contacts);
-//   updateAddressBook();
-//   addContactInput.value = '';
-// };
-
-// addContactButton.addEventListener('click', addContact);
-
-// // Инициализация колонок при загрузке
-// updateAddressBook();
-
-
-// const addButton = document.querySelector('.buttons__button--add');
-// const clearButton = document.querySelector('.buttons__button--clear');
-// const searchButton = document.querySelector('.buttons__button--search');
-
-// const nameInput = document.querySelector('#name');
-// const positionInput = document.querySelector('#position');
-// const phoneInput = document.querySelector('#phone');
-
-// const getContactElement = ({ letter, id, name, position, phone }) => {
-//   const contactElement = document.createElement('div');
-//   contactElement.classList.add('element');
-//   contactElement.innerHTML = `
-//     <div class="element__letter">${letter}</div>
-//     <div class="element__details">
-//       <div class="element__name">${name}</div>
-//       <div class="element__position">${position}</div>
-//       <div class="element__phone">${phone}</div>
-//     </div>
-//   `;
-//   contactElement.querySelector('.element__letter').dataset.id = id;
-//   contactElement.setAttribute('tabindex', '0');
-
-//   return contactElement;
-// };
-
-// const addContact = () => {
-//   const name = nameInput.value.trim();
-//   const position = positionInput.value.trim();
-//   const phone = phoneInput.value.trim();
-//   if (name && position && phone) {
-//     const letter = name[0].toUpperCase();
-//     const contact = { letter, id: name.toLowerCase(), name, position, phone };
-
-//     if (letter <= 'M') {
-//       ALPHABET_A_M.push(contact);
-//       ALPHABET_A_M.sort((a, b) => {
-//         if (a.name && b.name) {
-//           return a.name.localeCompare(b.name);
-//         }
-//         return 0;
-//       });
-//       updateColumn(ALPHABET_A_M, containerLeft);
-//     } else {
-//       ALPHABET_N_Z.push(contact);
-//       ALPHABET_N_Z.sort((a, b) => {
-//         if (a.name && b.name) {
-//           return a.name.localeCompare(b.name);
-//         }
-//         return 0;
-//       });
-
-//       updateColumn(ALPHABET_N_Z, containerRight);
-//     }
-//     // Очистка полей ввода nameInput.value = '';
-//     positionInput.value = '';
-//     phoneInput.value = '';
-//   } else {
-//     alert('Пожалуйста, заполните все поля.');
-//   }
-// };
-
-// const clearContacts = () => {
-//   ALPHABET_A_M.length = 0;
-//   ALPHABET_N_Z.length = 0;
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-// };
-
-// const searchContacts = () => {
-//   const searchQuery = nameInput.value.toLowerCase();
-//   const results = ALPHABET_A_M.concat(ALPHABET_N_Z).filter((contact) => contact.name.toLowerCase().includes(searchQuery));
-//   containerLeft.innerHTML = '';
-//   containerRight.innerHTML = '';
-//   updateColumn(results, containerLeft);
-// };
-
-// function updateColumn (alphabet, container) {
-//   // const existingContacts = Array.from(container.querySelectorAll('.element__letter')).map((el) => el.dataset.id);
-//   // const fragmentElement = document.createDocumentFragment();
-//   alphabet.forEach((element) => {
-//     let letterGroup = container.querySelector(`[data-letter="${element.letter}"]`);
-
-//     if (!letterGroup) {
-//       letterGroup = document.createElement('div');
-//       letterGroup.classList.add('letter-group');
-//       letterGroup.dataset.letter = element.letter;
-//       letterGroup.innerHTML = `<div class="letter-group__title">${element.letter}</div>`;
-//       container.append(letterGroup);
-//     }
-
-//     const contact = getContactElement(element);
-//     letterGroup.append(contact);
-//   });
-// }
-
-// addButton.addEventListener('click', addContact);
-// clearButton.addEventListener('click', clearContacts);
-// searchButton.addEventListener('click', searchContacts);
