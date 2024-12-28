@@ -1,6 +1,9 @@
-// import './modules/contact.js';
 import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
+
+const MINIMUM_LENGTH = 3;
+const PHONE_LENGTH_MIN = 11;
+const PHONE_LENGTH_MAX = 16;
 
 document.addEventListener('DOMContentLoaded', () => {
   const containerLeft = document.querySelector('.column__left');
@@ -92,13 +95,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const position = positionInput.value.trim();
     const phone = phoneInput.value.trim();
 
-    if (!name || !position || !phone) {
-      alert('Заполните все поля');
+    const inputs = [nameInput, positionInput, phoneInput];
+
+    // Проверка пустых значений
+    if (!validateInputs(inputs)) {
       return;
     }
 
+    // Проверка идентичных значений
     if (isContactExist(name, position, phone)) {
-      alert('Этот контакт уже записан!');
+      showErrorSameValue();
+      return;
+    }
+
+    // Проверка имени и должности
+    if (!checkedValue(nameInput) || !checkedValue(positionInput)) {
+      return;
+    }
+
+    // Проверка телефона
+    if (!checkedPhone(phoneInput)) {
       return;
     }
 
@@ -271,23 +287,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const newPosition = popupPositionInput.value.trim();
     const newPhone = popupPhoneInput.value.trim();
 
-    if (!newName || !newPosition || !newPhone) {
-      alert('Заполните все поля');
-      return;
-    }
-
     const oldName = currentContactElement.querySelector('.message__name').textContent;
     const oldPosition = currentContactElement.querySelector('.message__position').textContent;
     const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
-
-    // Проверяем уникальность контакта
-    if (
-      (newName !== oldName || newPosition !== oldPosition || newPhone !== oldPhone) &&
-      isContactExist(newName, newPosition, newPhone)
-    ) {
-      alert('Этот контакт уже записан!');
-      return;
-    }
 
     // Удаляем старый контакт из хранилища
     contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
@@ -454,4 +456,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Закрытие попапа по клику на свободную область
   searchOverlay.addEventListener('click', closeSearchModal);
+
+
+  // Функция вывода ошибки при пустых значениях
+  const errorMessage = document.querySelector('.interaction__error');
+  const errorClass = 'input--error'; // CSS-класс для выделения ошибок
+
+  function showErrorEmptyValue(input) {
+    if (!input.classList.contains(errorClass)) {
+      input.classList.add(errorClass);
+      errorMessage.textContent = 'Fill in all fields!';
+    }
+  }
+
+  // Валидация на пустые значения
+  function validateInputs(inputs) {
+    let isValid = true;
+
+    inputs.forEach((input) => {
+      resetErrors(input); // Сначала сбрасываем предыдущие ошибки
+
+      if (!input.value.trim()) {
+        showErrorEmptyValue(input);
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  }
+
+  // Функция для сброса ошибок
+  function resetErrors(input) {
+    input.addEventListener('input', () => {
+      input.classList.remove(errorClass); // Убираем класс ошибки
+
+      // Удаляем сообщение об ошибке, если оно есть
+      errorMessage.textContent = '';
+    });
+  }
+
+  // Функция вывода ошибки при добавлении уже существующего контакта
+  function showErrorSameValue() {
+    errorMessage.textContent = 'This contact has already been recorded!';
+  }
+
+  // Функция валидации имени и должности
+  function checkedValue(name) {
+    resetErrors(name); // Сначала сбрасываем предыдущие ошибки
+    const regLetters = /[a-zA-Z ]/gmi;
+
+    // Проверяем длину введенного значения
+    if (name.value.length <= MINIMUM_LENGTH) {
+      name.classList.add(errorClass);
+      errorMessage.textContent = 'Value cannot be shorter than 3 letters!';
+      return false;
+    }
+
+    // Проверяем формат введенного значения
+    if (!regLetters.test(name.value)) {
+      name.classList.add(errorClass);
+      errorMessage.textContent = 'Value must contain English letters!';
+      return false;
+    }
+
+    return true;
+  }
+
+  // Функция валидации телефона
+  function checkedPhone(phone) {
+    resetErrors(phone); // Сначала сбрасываем предыдущие ошибки
+
+    // Проверяем длину телефона
+    if (phone.value.length < PHONE_LENGTH_MIN || phone.value.length > PHONE_LENGTH_MAX) {
+      phone.classList.add(errorClass);
+      errorMessage.textContent = `The length should be from ${PHONE_LENGTH_MIN} to ${PHONE_LENGTH_MAX} characters!`;
+      return false;
+    }
+
+    return true;
+  }
+
+  // Ввод в поле телефона только цифр
+  function isNumericKeyEvent(event) {
+    const key = event.keyCode;
+    return ((key >= 48 && key <= 57) || // Цифры
+      (key >= 96 && key <= 109) || // Numpad
+      (key === 8 || key === 9 || key === 187 || key === 189 || key === 32 || key === 37 || key === 39)); // Backspace, Tab, +, -, стрелки
+  }
+
+  phoneInput.addEventListener('keydown', (evt) => {
+    if (!isNumericKeyEvent(evt)) {
+      evt.preventDefault();
+    }
+  });
 });
