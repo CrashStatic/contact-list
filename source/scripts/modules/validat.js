@@ -39,6 +39,11 @@ function resetErrors(input) {
   });
 }
 
+// Проверка на существование контакта
+function isContactExist(storage, name, position, phone) {
+  return storage.has(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+}
+
 // Функция вывода ошибки при добавлении уже существующего контакта
 function showErrorSameValue() {
   errorMessage.textContent = 'This contact has already been recorded!';
@@ -81,4 +86,4 @@ function checkedPhone(phone) {
 }
 
 
-export { validateInputs, showErrorSameValue, checkedValue, checkedPhone };
+export { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone };

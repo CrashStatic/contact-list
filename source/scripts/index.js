@@ -1,19 +1,15 @@
 import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
-import { validateInputs, showErrorSameValue, checkedValue, checkedPhone } from './modules/validat.js';
+import { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone } from './modules/validat.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Заполняем столбцы буквами
   const containerLeft = document.querySelector('.column__left');
   const containerRight = document.querySelector('.column__right');
 
   createColumn(ALPHABET_A_M, containerLeft);
   createColumn(ALPHABET_N_Z, containerRight);
 
-  // Селекторы элементов
-  const nameInput = document.getElementById('name');
-  const positionInput = document.getElementById('position');
-  const phoneInput = document.getElementById('phone');
-  const addButton = document.querySelector('.buttons__button--add');
 
   const contactsStorage = new Map(); // Хранилище контактов
 
@@ -42,11 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function saveContactsToLocalStorage() {
     const contactsArray = Array.from(contactsStorage.values());
     localStorage.setItem('contacts', JSON.stringify(contactsArray));
-  }
-
-  // Проверка на существование контакта
-  function isContactExist(name, position, phone) {
-    return contactsStorage.has(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
   }
 
 
@@ -84,6 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
+  // Селекторы элементов
+  const nameInput = document.getElementById('name');
+  const positionInput = document.getElementById('position');
+  const phoneInput = document.getElementById('phone');
+  const addButton = document.querySelector('.buttons__button--add');
+
   // Обработчик для кнопки ADD
   addButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -100,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Проверка идентичных значений
-    if (isContactExist(name, position, phone)) {
+    if (isContactExist(contactsStorage, name, position, phone)) {
       showErrorSameValue();
       return;
     }
@@ -341,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+
   // Элементы модального окна поиска
   const searchButton = document.querySelector('.buttons__button--search');
   const searchModal = document.querySelector('.modal');
@@ -434,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Обработчик для кнопки "Show All"
+  // Обработчик для кнопки "Show All" в модальном окне
   showAllButton.addEventListener('click', () => {
     const allContacts = Array.from(contactsStorage.values());
     displaySearchResults(allContacts);
@@ -451,8 +449,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Обработчик на закрытие модального окна
   searchCloseButton.addEventListener('click', closeSearchModal);
 
-  // Закрытие попапа по клику на свободную область
+  // Закрытие модального окна по клику на свободную область
   searchOverlay.addEventListener('click', closeSearchModal);
+
 
   // Ввод в поле телефона только цифр
   function isNumericKeyEvent(event) {
