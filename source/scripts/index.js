@@ -3,6 +3,8 @@ import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
 import { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone } from './modules/validat.js';
 
 import { updateCounter } from './modules/counter.js';
+import { getContactElement, addContactToStorage } from './modules/contact.js';
+import { contactsStorage, loadContactsFromLocalStorage, saveContactsToLocalStorage } from './modules/local-storage.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Заполняем столбцы буквами
@@ -13,72 +15,76 @@ document.addEventListener('DOMContentLoaded', () => {
   createColumn(ALPHABET_N_Z, containerRight);
 
 
-  const contactsStorage = new Map(); // Хранилище контактов
+  // const contactsStorage = new Map(); // Хранилище контактов
 
   // Загрузка контактов из localStorage
-  function loadContactsFromLocalStorage() {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      try {
-        const contacts = JSON.parse(savedContacts); // Преобразуем строку в массив
-        if (Array.isArray(contacts)) {
-          contacts.forEach(({ name, position, phone }) => {
-            const firstLetter = name[0].toUpperCase();
-            const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
-            if (letterElement) {
-              addContactToStorage(name, position, phone, letterElement);
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Ошибка парсинга данных из localStorage:', error);
-      }
-    }
-  }
+  // function loadContactsFromLocalStorage() {
+  //   const savedContacts = localStorage.getItem('contacts');
+  //   if (savedContacts) {
+  //     try {
+  //       const contacts = JSON.parse(savedContacts); // Преобразуем строку в массив
+  //       if (Array.isArray(contacts)) {
+  //         contacts.forEach(({ name, position, phone }) => {
+  //           const firstLetter = name[0].toUpperCase();
+  //           const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  //           if (letterElement) {
+  //             addContactToStorage(name, position, phone, letterElement);
+  //           }
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error('Ошибка парсинга данных из localStorage:', error);
+  //     }
+  //   }
+  // }
 
   // Сохранение контактов в localStorage
-  function saveContactsToLocalStorage() {
-    const contactsArray = Array.from(contactsStorage.values());
-    localStorage.setItem('contacts', JSON.stringify(contactsArray));
-  }
+  // function saveContactsToLocalStorage() {
+  //   const contactsArray = Array.from(contactsStorage.values());
+  //   localStorage.setItem('contacts', JSON.stringify(contactsArray));
+  // }
+
+  // Загрузка контактов при старте
+
+  loadContactsFromLocalStorage();
 
 
   // Функция создания контакта
-  const getContactElement = (name, position, phone) => {
-    const letterTemplate = document.querySelector('#message').content.querySelector('.message');
-    const contactElement = letterTemplate.cloneNode(true);
-    contactElement.querySelector('.message__name').textContent = name;
-    contactElement.querySelector('.message__position').textContent = position;
-    contactElement.querySelector('.message__phone').textContent = phone;
-    return contactElement;
-  };
+  // const getContactElement = (name, position, phone) => {
+  //   const letterTemplate = document.querySelector('#message').content.querySelector('.message');
+  //   const contactElement = letterTemplate.cloneNode(true);
+  //   contactElement.querySelector('.message__name').textContent = name;
+  //   contactElement.querySelector('.message__position').textContent = position;
+  //   contactElement.querySelector('.message__phone').textContent = phone;
+  //   return contactElement;
+  // };
 
 
   // Добавление контакта в DOM и запись в хранилище
-  function addContactToStorage(name, position, phone, letterElement, saveToLocal = true) {
+  // function addContactToStorage(name, position, phone, letterElement, saveToLocal = true) {
 
-    // Заполняем контакт
-    const contactElement = getContactElement(name, position, phone);
+  //   // Заполняем контакт
+  //   const contactElement = getContactElement(name, position, phone);
 
-    // Добавляем контакт в DOM
-    const contactsContainer = letterElement.querySelector('.element__contacts');
-    contactsContainer.append(contactElement); // Добавляем контакт
+  //   // Добавляем контакт в DOM
+  //   const contactsContainer = letterElement.querySelector('.element__contacts');
+  //   contactsContainer.append(contactElement); // Добавляем контакт
 
-    // Обновляем счётчик
-    const counterElement = letterElement.querySelector('.element__counter');
-    updateCounter(counterElement, contactsContainer);
+  //   // Обновляем счётчик
+  //   const counterElement = letterElement.querySelector('.element__counter');
+  //   updateCounter(counterElement, contactsContainer);
 
-    // Сохраняем контакт в хранилище
-    contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
+  //   // Сохраняем контакт в хранилище
+  //   contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
 
-    // Сохраняем в localStorage, если нужно
-    if (saveToLocal) {
-      saveContactsToLocalStorage();
-    }
-  }
-
+  //   // Сохраняем в localStorage, если нужно
+  //   if (saveToLocal) {
+  //     saveContactsToLocalStorage();
+  //   }
+  // }
 
   // Селекторы элементов
+
   const nameInput = document.getElementById('name');
   const positionInput = document.getElementById('position');
   const phoneInput = document.getElementById('phone');
@@ -128,82 +134,141 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Раскрывающееся меню с контактами при клике на букву
-  const letterElements = document.querySelectorAll('.element__container');
+  // const letterElements = document.querySelectorAll('.element__container');
 
-  letterElements.forEach((button) => {
-    button.addEventListener('click', (e) => {
-      e.preventDefault();
+  // letterElements.forEach((button) => {
+  //   button.addEventListener('click', (e) => {
+  //     e.preventDefault();
 
-      const currentBtn = e.target.closest('.element');
-      const currentContent = currentBtn.querySelector('.element__contacts');
+  //     const currentBtn = e.target.closest('.element');
+  //     const currentContent = currentBtn.querySelector('.element__contacts');
 
-      currentContent.classList.toggle('element__contacts--open');
+  //     currentContent.classList.toggle('element__contacts--open');
 
-      if (currentContent.classList.contains('element__contacts--open')) {
-        currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
-      } else {
-        currentContent.style.maxHeight = 0;
-      }
-    });
-  });
+  //     if (currentContent.classList.contains('element__contacts--open')) {
+  //       currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
+  //     } else {
+  //       currentContent.style.maxHeight = 0;
+  //     }
+  //   });
+  // });
 
-  // Функция удвления контакта из списка
-  const handleDeleteContact = (event) => {
-    const deleteButton = event.target.closest('.message__delete');
-    if (!deleteButton) {
-      return;
-    }
+  // document.querySelector('.contact-table').addEventListener('click', (event) => {
+  //   if (event.target.classList.closest('column__element')) {
+  //     const currentBtn = event.target.closest('.element');
+  //     const currentContent = currentBtn.querySelector('.element__contacts');
 
-    const contactMessage = deleteButton.closest('.message');
-    const name = contactMessage.querySelector('.message__name').textContent;
-    const position = contactMessage.querySelector('.message__position').textContent;
-    const phone = contactMessage.querySelector('.message__phone').textContent;
+  //     currentContent.classList.toggle('element__contacts--open');
 
-    // Удаляем из хранилища
-    contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+  //     if (currentContent.classList.contains('element__contacts--open')) {
+  //       currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
+  //     } else {
+  //       currentContent.style.maxHeight = 0;
+  //     }
+  //   }
+  // });
 
-    if (contactMessage) {
+  // // Функция удаления контакта из списка
+  // document.addEventListener('click', (event) => {
+  //   if (event.target && event.target.classList.contains('message__delete')) {
+  //     const contactMessage = event.target.closest('.message');
+  //     const name = contactMessage.querySelector('.message__name').textContent;
+  //     const position = contactMessage.querySelector('.message__position').textContent;
+  //     const phone = contactMessage.querySelector('.message__phone').textContent;
 
-      // Удаляем из DOM
-      contactMessage.remove();
+  //     // Удаляем из хранилища
+  //     contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
 
-      // Обновляем данные в основном списке
-      const firstLetter = name[0].toUpperCase();
-      const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  //     // Удаляем из DOM
+  //     contactMessage.remove();
 
-      if (letterElement) {
-        const contactsContainer = letterElement.querySelector('.element__contacts');
-        const contactElements = contactsContainer.querySelectorAll('.element__message');
+  //     // Обновляем данные в основном списке
+  //     const firstLetter = name[0].toUpperCase();
+  //     const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
 
-        contactElements.forEach((contact) => {
-          const contactName = contact.querySelector('.message__name').textContent;
-          const contactPosition = contact.querySelector('.message__position').textContent;
-          const contactPhone = contact.querySelector('.message__phone').textContent;
+  //     if (letterElement) {
+  //       const contactsContainer = letterElement.querySelector('.element__contacts');
+  //       const contactElements = contactsContainer.querySelectorAll('.element__message');
 
-          // Удаляем только нужный контакт
-          if (contactName === name && contactPosition === position && contactPhone === phone) {
-            contact.remove();
-          }
-        });
+  //       contactElements.forEach((contact) => {
+  //         const contactName = contact.querySelector('.message__name').textContent;
+  //         const contactPosition = contact.querySelector('.message__position').textContent;
+  //         const contactPhone = contact.querySelector('.message__phone').textContent;
 
-        // Обновляем счётчик для буквы
-        const counterElement = letterElement.querySelector('.element__counter');
-        updateCounter(counterElement, contactsContainer);
-      }
+  //         // Удаляем только нужный контакт
+  //         if (contactName === name && contactPosition === position && contactPhone === phone) {
+  //           contact.remove();
+  //         }
+  //       });
 
-      // Удаляем контакт из модального окна
-      contactMessage.remove();
+  //       // Обновляем счётчик для буквы
+  //       const counterElement = letterElement.querySelector('.element__counter');
+  //       updateCounter(counterElement, contactsContainer);
+  //     }
 
-      // Обновляем данные в localStorage
-      saveContactsToLocalStorage();
-    }
-  };
+  //     // Удаляем контакт из модального окна
+  //     contactMessage.remove();
+
+  //     // Обновляем данные в localStorage
+  //     saveContactsToLocalStorage();
+  //   }
+
+  //   // const deleteButton = event.target.closest('.message__delete');
+  //   // if (!deleteButton) {
+  //   //   return;
+  //   // }
+
+  //   // const contactMessage = deleteButton.closest('.message');
+  //   // const name = contactMessage.querySelector('.message__name').textContent;
+  //   // const position = contactMessage.querySelector('.message__position').textContent;
+  //   // const phone = contactMessage.querySelector('.message__phone').textContent;
+
+  //   // // Удаляем из хранилища
+  //   // contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+
+  //   // if (contactMessage) {
+
+  //   //   // // Удаляем из DOM
+  //   //   // contactMessage.remove();
+
+  //   //   // // Обновляем данные в основном списке
+  //   //   // const firstLetter = name[0].toUpperCase();
+  //   //   // const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+
+  //   //   // if (letterElement) {
+  //   //   //   const contactsContainer = letterElement.querySelector('.element__contacts');
+  //   //   //   const contactElements = contactsContainer.querySelectorAll('.element__message');
+
+  //   //   //   contactElements.forEach((contact) => {
+  //   //   //     const contactName = contact.querySelector('.message__name').textContent;
+  //   //   //     const contactPosition = contact.querySelector('.message__position').textContent;
+  //   //   //     const contactPhone = contact.querySelector('.message__phone').textContent;
+
+  //   //   //     // Удаляем только нужный контакт
+  //   //   //     if (contactName === name && contactPosition === position && contactPhone === phone) {
+  //   //   //       contact.remove();
+  //   //   //     }
+  //   //   //   });
+
+  //   //   //   // Обновляем счётчик для буквы
+  //   //   //   const counterElement = letterElement.querySelector('.element__counter');
+  //   //   //   updateCounter(counterElement, contactsContainer);
+  //   //   // }
+
+  //   //   // // Удаляем контакт из модального окна
+  //   //   // contactMessage.remove();
+
+  //   //   // // Обновляем данные в localStorage
+  //   //   // saveContactsToLocalStorage();
+  //   // }
+  // });
 
   // Вешаем обработчик событий на весь документ для динамических элементов
-  document.addEventListener('click', handleDeleteContact);
+  // document.addEventListener('click', handleDeleteContact);
 
 
   // Функция очищения всего списка
+
   const clearButton = document.querySelector('.buttons__button--clear');
 
   const clearAllContacts = () => {
@@ -229,104 +294,101 @@ document.addEventListener('DOMContentLoaded', () => {
   clearButton.addEventListener('click', clearAllContacts);
 
 
-  // Загрузка контактов при старте
-  loadContactsFromLocalStorage();
+  // // Элементы попапа
+  // const editPopup = document.querySelector('#edit-popup');
+  // const popupNameInput = editPopup.querySelector('.popup__input--name');
+  // const popupPositionInput = editPopup.querySelector('.popup__input--position');
+  // const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
+  // const popupSaveButton = editPopup.querySelector('.popup__button-save');
+  // const popupCancelButton = editPopup.querySelector('.popup__button-cancel');
+  // const popupOverlay = document.querySelector('.popup__overlay');
 
+  // let currentContactElement = null; // Контакт, который редактируется
 
-  // Элементы попапа
-  const editPopup = document.querySelector('#edit-popup');
-  const popupNameInput = editPopup.querySelector('.popup__input--name');
-  const popupPositionInput = editPopup.querySelector('.popup__input--position');
-  const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
-  const popupSaveButton = editPopup.querySelector('.popup__button-save');
-  const popupCancelButton = editPopup.querySelector('.popup__button-cancel');
-  const popupOverlay = document.querySelector('.popup__overlay');
+  // // Открытие попапа
+  // function openEditPopup(contactElement) {
+  //   currentContactElement = contactElement;
 
-  let currentContactElement = null; // Контакт, который редактируется
+  //   // Заполняем поля попапа текущими данными контакта
+  //   popupNameInput.value = contactElement.querySelector('.message__name').textContent;
+  //   popupPositionInput.value = contactElement.querySelector('.message__position').textContent;
+  //   popupPhoneInput.value = contactElement.querySelector('.message__phone').textContent;
 
-  // Открытие попапа
-  function openEditPopup(contactElement) {
-    currentContactElement = contactElement;
+  //   editPopup.classList.add('popup--open');
+  // }
 
-    // Заполняем поля попапа текущими данными контакта
-    popupNameInput.value = contactElement.querySelector('.message__name').textContent;
-    popupPositionInput.value = contactElement.querySelector('.message__position').textContent;
-    popupPhoneInput.value = contactElement.querySelector('.message__phone').textContent;
+  // // Закрытие попапа
+  // function closeEditPopup() {
+  //   editPopup.classList.remove('popup--open');
+  //   currentContactElement = null;
+  // }
 
-    editPopup.classList.add('popup--open');
-  }
+  // // Сохранение изменений в попапе
+  // popupSaveButton.addEventListener('click', () => {
+  //   const newName = popupNameInput.value.trim();
+  //   const newPosition = popupPositionInput.value.trim();
+  //   const newPhone = popupPhoneInput.value.trim();
 
-  // Закрытие попапа
-  function closeEditPopup() {
-    editPopup.classList.remove('popup--open');
-    currentContactElement = null;
-  }
+  //   const oldName = currentContactElement.querySelector('.message__name').textContent;
+  //   const oldPosition = currentContactElement.querySelector('.message__position').textContent;
+  //   const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
 
-  // Сохранение изменений в попапе
-  popupSaveButton.addEventListener('click', () => {
-    const newName = popupNameInput.value.trim();
-    const newPosition = popupPositionInput.value.trim();
-    const newPhone = popupPhoneInput.value.trim();
+  //   // Удаляем старый контакт из хранилища
+  //   contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
 
-    const oldName = currentContactElement.querySelector('.message__name').textContent;
-    const oldPosition = currentContactElement.querySelector('.message__position').textContent;
-    const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
+  //   // Обновляем контакт в хранилище
+  //   contactsStorage.set(`${newName.toLowerCase()}|${newPosition.toLowerCase()}|${newPhone}`, { name: newName, position: newPosition, phone: newPhone });
 
-    // Удаляем старый контакт из хранилища
-    contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
+  //   // Обновляем данные в DOM
+  //   currentContactElement.querySelector('.message__name').textContent = newName;
+  //   currentContactElement.querySelector('.message__position').textContent = newPosition;
+  //   currentContactElement.querySelector('.message__phone').textContent = newPhone;
 
-    // Обновляем контакт в хранилище
-    contactsStorage.set(`${newName.toLowerCase()}|${newPosition.toLowerCase()}|${newPhone}`, { name: newName, position: newPosition, phone: newPhone });
+  //   // Обновляем данные в основном списке через взаимодействие в модальном окне
+  //   const firstLetter = oldName[0].toUpperCase();
+  //   const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
 
-    // Обновляем данные в DOM
-    currentContactElement.querySelector('.message__name').textContent = newName;
-    currentContactElement.querySelector('.message__position').textContent = newPosition;
-    currentContactElement.querySelector('.message__phone').textContent = newPhone;
+  //   if (letterElement) {
+  //     const contactsContainer = letterElement.querySelector('.element__contacts');
+  //     const contactElements = contactsContainer.querySelectorAll('.element__message');
 
-    // Обновляем данные в основном списке через взаимодействие в модальном окне
-    const firstLetter = oldName[0].toUpperCase();
-    const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  //     contactElements.forEach((contact) => {
+  //       const contactName = contact.querySelector('.message__name').textContent;
+  //       const contactPosition = contact.querySelector('.message__position').textContent;
+  //       const contactPhone = contact.querySelector('.message__phone').textContent;
 
-    if (letterElement) {
-      const contactsContainer = letterElement.querySelector('.element__contacts');
-      const contactElements = contactsContainer.querySelectorAll('.element__message');
+  //       // Обновляем только нужный контакт
+  //       if (contactName === oldName && contactPosition === oldPosition && contactPhone === oldPhone) {
+  //         contact.querySelector('.message__name').textContent = newName;
+  //         contact.querySelector('.message__position').textContent = newPosition;
+  //         contact.querySelector('.message__phone').textContent = newPhone;
+  //       }
+  //     });
+  //   }
 
-      contactElements.forEach((contact) => {
-        const contactName = contact.querySelector('.message__name').textContent;
-        const contactPosition = contact.querySelector('.message__position').textContent;
-        const contactPhone = contact.querySelector('.message__phone').textContent;
+  //   // Сохраняем изменения в localStorage
+  //   saveContactsToLocalStorage();
 
-        // Обновляем только нужный контакт
-        if (contactName === oldName && contactPosition === oldPosition && contactPhone === oldPhone) {
-          contact.querySelector('.message__name').textContent = newName;
-          contact.querySelector('.message__position').textContent = newPosition;
-          contact.querySelector('.message__phone').textContent = newPhone;
-        }
-      });
-    }
+  //   closeEditPopup();
+  // });
 
-    // Сохраняем изменения в localStorage
-    saveContactsToLocalStorage();
+  // // Закрытие попапа по клику на свободную область
+  // popupOverlay.addEventListener('click', closeEditPopup);
 
-    closeEditPopup();
-  });
+  // // Отмена редактирования и закрытие попапа
+  // popupCancelButton.addEventListener('click', closeEditPopup);
 
-  // Закрытие попапа по клику на свободную область
-  popupOverlay.addEventListener('click', closeEditPopup);
-
-  // Отмена редактирования и закрытие попапа
-  popupCancelButton.addEventListener('click', closeEditPopup);
-
-  // Добавляем обработчик на кнопку "Edit"
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('message__edit')) {
-      const contactElement = e.target.closest('.message');
-      openEditPopup(contactElement);
-    }
-  });
+  // // Обработчик редактирования контакта
+  // document.addEventListener('click', (e) => {
+  //   if (e.target.classList.contains('message__edit')) {
+  //     const contactElement = e.target.closest('.message');
+  //     openEditPopup(contactElement);
+  //   }
+  // });
 
 
   // Элементы модального окна поиска
+
   const searchButton = document.querySelector('.buttons__button--search');
   const searchModal = document.querySelector('.modal');
   const searchInput = searchModal.querySelector('.modal__input');
@@ -410,18 +472,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Обработчик для кнопки Edit в модальном окне
-  searchArea.addEventListener('click', (event) => {
-    const editButton = event.target.closest('.message__edit');
-    if (editButton) {
-      const contactElement = editButton.closest('.element__message');
-      if (contactElement) {
-        openEditPopup(contactElement);
-      }
-    }
-  });
+  // // Обработчик для кнопки Edit в модальном окне
+  // searchArea.addEventListener('click', (event) => {
+  //   const editButton = event.target.closest('.message__edit');
+  //   if (editButton) {
+  //     const contactElement = editButton.closest('.element__message');
+  //     if (contactElement) {
+  //       openEditPopup(contactElement);
+  //     }
+  //   }
+  // });
 
   // Обработчик для кнопки "Show All" в модальном окне
+
   showAllButton.addEventListener('click', () => {
     const allContacts = Array.from(contactsStorage.values());
     displaySearchResults(allContacts);

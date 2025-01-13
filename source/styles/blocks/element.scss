@@ -17,9 +17,15 @@
   }
 }
 
-.element:has(>.element__container--active) {
-  &:hover,
+.element--active {
+  background-color: #e5aff5;
+
   &:focus-visible {
+    background-color: #eca0d9;
+  }
+
+  &:focus {
+    outline: none;
     background-color: #eca0d9;
   }
 }
@@ -29,22 +35,7 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 10px;
-
-  &:hover,
-  &:focus-visible {
-    background-color: #eca0d9;
-  }
 }
-
-.element__container:has(>.element__counter--active) {
-  background-color: #e5aff5;
-
-  &:hover,
-  &:focus-visible {
-    background-color: #eca0d9;
-  }
-}
-
 
 .element__letter {
   font-weight: 800;
