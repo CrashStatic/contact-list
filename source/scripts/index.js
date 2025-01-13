@@ -5,6 +5,7 @@ import { validateInputs, showErrorSameValue, isContactExist, checkedValue, check
 import { updateCounter } from './modules/counter.js';
 import { getContactElement, addContactToStorage } from './modules/contact.js';
 import { contactsStorage, loadContactsFromLocalStorage, saveContactsToLocalStorage } from './modules/local-storage.js';
+import { initPhoneInput } from './modules/validat.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Заполняем столбцы буквами
@@ -505,17 +506,33 @@ document.addEventListener('DOMContentLoaded', () => {
   searchOverlay.addEventListener('click', closeSearchModal);
 
 
-  // Ввод в поле телефона только цифр
-  function isNumericKeyEvent(event) {
-    const key = event.keyCode;
-    return ((key >= 48 && key <= 57) || // Цифры
-      (key >= 96 && key <= 109) || // Numpad
-      (key === 8 || key === 9 || key === 187 || key === 189 || key === 32 || key === 37 || key === 39)); // Backspace, Tab, +, -, стрелки
-  }
+  // // Проверка телефона
+  // const chekedPhone = (input) => {
+  //   const phoneValue = input.value;
 
-  phoneInput.addEventListener('keydown', (evt) => {
-    if (!isNumericKeyEvent(evt)) {
-      evt.preventDefault();
-    }
+  //   if (!VALID_NUMBER.test(phoneValue)) {
+  //     input.classList.add('form__input--error');
+  //     input.setCustomValidity('Введите номер телефона в формате +7 777 7777777');
+  //     input.reportValidity();
+  //     return false;
+  //   } else {
+  //     input.classList.remove('form__input--error');
+  //     input.setCustomValidity('');
+  //     return true;
+  //   }
+  // };
+
+  // initPhoneInput(phoneInput);
+
+  // phoneInput.addEventListener('keydown', (evt) => {
+  //   if (!isNumericKeyEvent(evt)) {
+  //     evt.preventDefault();
+  //   }
+  // });
+
+  phoneInput.addEventListener('input', () => {
+    // phone.classList.remove('form__input--error');
+    // phone.setCustomValidity('');
+    initPhoneInput(phoneInput);
   });
 });

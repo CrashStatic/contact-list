@@ -1,6 +1,6 @@
 const MINIMUM_LENGTH = 3;
-const PHONE_LENGTH_MIN = 11;
-const PHONE_LENGTH_MAX = 16;
+// const PHONE_LENGTH_MIN = 11;
+// const PHONE_LENGTH_MAX = 16;
 
 // Функция вывода ошибки при пустых значениях
 const errorMessage = document.querySelector('.interaction__error');
@@ -72,18 +72,93 @@ function checkedValue(name) {
 }
 
 // Функция валидации телефона
-function checkedPhone(phone) {
-  resetErrors(phone); // Сначала сбрасываем предыдущие ошибки
+// function checkedPhone(phone) {
+//   resetErrors(phone); // Сначала сбрасываем предыдущие ошибки
 
-  // Проверяем длину телефона
-  if (phone.value.length < PHONE_LENGTH_MIN || phone.value.length > PHONE_LENGTH_MAX) {
-    phone.classList.add(errorClass);
-    errorMessage.textContent = `The length should be from ${PHONE_LENGTH_MIN} to ${PHONE_LENGTH_MAX} characters!`;
+//   const regPhone = /^\+?[0-9\s-]+$/;
+
+
+//   // Проверяем формат введенного значения
+//   if (!regPhone.test(phone.value)) {
+//     phone.classList.add(errorClass);
+//     errorMessage.textContent = 'Wrong number!';
+//     return false;
+//   }
+
+//   // // Проверяем длину телефона
+//   // if (phone.value.length < PHONE_LENGTH_MIN || phone.value.length > PHONE_LENGTH_MAX) {
+//   //   phone.classList.add(errorClass);
+//   //   errorMessage.textContent = `The length should be from ${PHONE_LENGTH_MIN} to ${PHONE_LENGTH_MAX} characters!`;
+//   //   return false;
+//   // }
+
+//   return true;
+// }
+
+
+const VALID_NUMBER = /[+][7][\d ()-]{12}/gu;
+
+// Проверка телефона
+const chekedPhone = (input) => {
+  resetErrors(input); // Сначала сбрасываем предыдущие ошибки
+
+  const phoneValue = input.value;
+
+  if (!VALID_NUMBER.test(phoneValue)) {
+    input.classList.add(errorClass);
+    errorMessage.textContent = 'Wrong number!';
     return false;
+  } else {
+    return true;
   }
+};
 
-  return true;
-}
+//Добавляем ошибки для невалидных полей
+inputs.forEach((input) => {
+  input.addEventListener('invalid', () => {
+    input.classList.add('form__input--error');
+  });
+
+  input.addEventListener('input', () => {
+    input.classList.remove('form__input--error');
+  });
+});
+
+// Маска телефона
+
+let oldLength = 0;
+
+const initPhoneInput = (phone) => {
+  phone.addEventListener('input', () => {
+    const value = phone.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+    const currentLength = phone.value.length;
+
+    if (currentLength < oldLength){
+      oldLength--;
+      return;
+    }
+
+    phone.value = '+7 ';
+
+    if (currentLength > 1) {
+      phone.value += value.substring(1, 4);
+    }
+
+    if (currentLength >= 4) {
+      phone.value += ` ${value.substring(4, 7)}`;
+    }
+
+    if (currentLength >= 7) {
+      phone.value += `${value.substring(7, 9)}`;
+    }
+
+    if (currentLength >= 9) {
+      phone.value += `${value.substring(9, 11)}`;
+    }
+
+    oldLength++;
+  });
+};
 
 
-export { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone };
+export { validateInputs, showErrorSameValue, isContactExist, checkedValue, chekedPhone, initPhoneInput };
