@@ -5,13 +5,6 @@
   background-color: #efbae2;
   border: 1px solid #8c8181;
   border-bottom: none;
-}
-
-.element__container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px;
   cursor: pointer;
 
   &:hover,
@@ -21,6 +14,25 @@
 
   &:focus {
     outline: none;
+  }
+}
+
+.element:has(>.element__container--active) {
+  &:hover,
+  &:focus-visible {
+    background-color: #eca0d9;
+  }
+}
+
+.element__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+
+  &:hover,
+  &:focus-visible {
+    background-color: #eca0d9;
   }
 }
 
@@ -52,8 +64,10 @@
   flex-direction: column;
   overflow: hidden;
   max-height: 0;
+  visibility: hidden;
 }
 
 .element__contacts--open {
   overflow: visible;
+  visibility: visible;
 }
