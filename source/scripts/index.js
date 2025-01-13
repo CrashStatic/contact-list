@@ -2,6 +2,8 @@ import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
 import { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone } from './modules/validat.js';
 
+import { updateCounter } from './modules/counter.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Заполняем столбцы буквами
   const containerLeft = document.querySelector('.column__left');
@@ -144,21 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-
-  // Функция для обновления счётчика
-  function updateCounter(counterElement, contactsContainer) {
-    const count = contactsContainer.children.length; // Количество контактов
-
-    if (count > 0) {
-      counterElement.classList.add('element__counter--active');
-      counterElement.textContent = count;
-    } else {
-      counterElement.classList.remove('element__counter--active');
-      counterElement.textContent = 0;
-    }
-  }
-
 
   // Функция удвления контакта из списка
   const handleDeleteContact = (event) => {
