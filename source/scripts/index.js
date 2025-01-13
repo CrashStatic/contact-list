@@ -5,7 +5,7 @@ import { validateInputs, showErrorSameValue, isContactExist, checkedValue, check
 import { updateCounter } from './modules/counter.js';
 import { getContactElement, addContactToStorage } from './modules/contact.js';
 import { contactsStorage, loadContactsFromLocalStorage, saveContactsToLocalStorage } from './modules/local-storage.js';
-import { initPhoneInput } from './modules/validat.js';
+import { initPhoneInput } from './modules/phone-mask.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Заполняем столбцы буквами
@@ -506,33 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
   searchOverlay.addEventListener('click', closeSearchModal);
 
 
-  // // Проверка телефона
-  // const chekedPhone = (input) => {
-  //   const phoneValue = input.value;
-
-  //   if (!VALID_NUMBER.test(phoneValue)) {
-  //     input.classList.add('form__input--error');
-  //     input.setCustomValidity('Введите номер телефона в формате +7 777 7777777');
-  //     input.reportValidity();
-  //     return false;
-  //   } else {
-  //     input.classList.remove('form__input--error');
-  //     input.setCustomValidity('');
-  //     return true;
-  //   }
-  // };
-
-  // initPhoneInput(phoneInput);
-
-  // phoneInput.addEventListener('keydown', (evt) => {
-  //   if (!isNumericKeyEvent(evt)) {
-  //     evt.preventDefault();
-  //   }
-  // });
-
-  phoneInput.addEventListener('input', () => {
-    // phone.classList.remove('form__input--error');
-    // phone.setCustomValidity('');
-    initPhoneInput(phoneInput);
-  });
+  // Работа с телефоном
+  initPhoneInput(phoneInput);
 });
