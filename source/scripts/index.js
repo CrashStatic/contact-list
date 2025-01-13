@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     contactsContainer.append(contactElement); // Добавляем контакт
 
     // Обновляем счётчик
-    updateCounter(letterElement);
+    const counterElement = letterElement.querySelector('.element__counter');
+    updateCounter(counterElement, contactsContainer);
 
     // Сохраняем контакт в хранилище
     contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
@@ -146,10 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Функция для обновления счётчика
-  function updateCounter(letterContainer) {
-    const counterElement = letterContainer.querySelector('.element__counter');
-    const contactsContainer = letterContainer.querySelector('.element__contacts');
-
+  function updateCounter(counterElement, contactsContainer) {
     const count = contactsContainer.children.length; // Количество контактов
 
     if (count > 0) {
@@ -202,7 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Обновляем счётчик для буквы
-        updateCounter(letterElement);
+        const counterElement = letterElement.querySelector('.element__counter');
+        updateCounter(counterElement, contactsContainer);
       }
 
       // Удаляем контакт из модального окна
@@ -228,7 +227,8 @@ document.addEventListener('DOMContentLoaded', () => {
       contactsContainer.innerHTML = '';
 
       // Обновляем счётчик
-      updateCounter(letterElement);
+      const counterElement = letterElement.querySelector('.element__counter');
+      updateCounter(counterElement, contactsContainer);
     });
 
     // Очищаем хранилище
@@ -415,7 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstLetter = name[0].toUpperCase();
         const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
         if (letterElement) {
-          updateCounter(letterElement);
+          const counterElement = letterElement.querySelector('.element__counter');
+          const contactsContainer = letterElement.querySelector('.element__contacts');
+          updateCounter(counterElement, contactsContainer);
         }
       }
     }
