@@ -1,35 +1,39 @@
 // Маска телефона
-let oldLength = 0;
-
 const initPhoneInput = (phone) => {
-  phone.addEventListener('input', () => {
-    const value = phone.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
-    const currentLength = phone.value.length;
+  let oldValue = '';
 
-    if (currentLength < oldLength) {
-      oldLength--;
+  phone.addEventListener('input', () => {
+    let value = phone.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+
+    // Если длина значения меньше предыдущего — это удаление, ничего не делаем
+    if (value.length < oldValue.length) {
+      oldValue = value;
       return;
     }
 
-    phone.value = '+7 ';
-
-    if (currentLength > 1) {
-      phone.value += value.substring(1, 4);
+    // Добавляем префикс только если это первый ввод
+    if (value.length === 1 && value[0] !== '7') {
+      value = `7${ value}`; // Добавляем '7', если это первый ввод
     }
 
-    if (currentLength >= 4) {
-      phone.value += ` ${value.substring(4, 7)}`;
+    // Форматируем номер
+    let formattedValue = '+7 ';
+
+    if (value.length > 1) {
+      formattedValue += value.substring(1, 4);
+    }
+    if (value.length > 4) {
+      formattedValue += ` ${value.substring(4, 7)}`;
+    }
+    if (value.length > 7) {
+      formattedValue += ` ${value.substring(7, 9)}`;
+    }
+    if (value.length > 9) {
+      formattedValue += ` ${value.substring(9, 11)}`;
     }
 
-    if (currentLength >= 7) {
-      phone.value += `${value.substring(7, 9)}`;
-    }
-
-    if (currentLength >= 9) {
-      phone.value += `${value.substring(9, 11)}`;
-    }
-
-    oldLength++;
+    phone.value = formattedValue; // Обновляем поле ввода
+    oldValue = value; // Обновляем старое значение
   });
 };
 

@@ -10,7 +10,7 @@ function updateCounter(counterElement, contactsContainer) {
     counterElement.textContent = count;
   } else {
     counterElement.classList.remove('element__counter--active');
-    contactsContainer.classList.remove('element--active');
+    element.classList.remove('element--active');
     counterElement.textContent = 0;
   }
 }

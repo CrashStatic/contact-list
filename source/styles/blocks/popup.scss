@@ -38,6 +38,10 @@
   margin: auto;
   border-radius: 5px;
   border: 1px solid #a49898;
+
+  h2 {
+    margin-bottom: 30px;
+  }
 }
 
 .popup__button-cancel {
@@ -63,5 +67,13 @@
 }
 
 .popup__button-save {
-  margin-top: 10px;
+  margin-top: 25px;
+}
+
+.popup__error {
+  position: absolute;
+  top: 74px;
+  color: #ff0000;
+  font-size: 14px;
+  text-align: center;
 }

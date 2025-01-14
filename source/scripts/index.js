@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
   const addButton = document.querySelector('.buttons__button--add');
 
+  // Работа с телефоном
+  initPhoneInput(phoneInput);
+
   // Обработчик для кнопки ADD
   addButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -99,26 +102,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const position = positionInput.value.trim();
     const phone = phoneInput.value.trim();
 
+    const errorMessage = document.querySelector('.interaction__error');
     const inputs = [nameInput, positionInput, phoneInput];
 
     // Проверка пустых значений
-    if (!validateInputs(inputs)) {
+    if (!validateInputs(inputs, errorMessage)) {
       return;
     }
 
     // Проверка идентичных значений
     if (isContactExist(contactsStorage, name, position, phone)) {
-      showErrorSameValue();
+      showErrorSameValue(errorMessage);
       return;
     }
 
     // Проверка имени и должности
-    if (!checkedValue(nameInput) || !checkedValue(positionInput)) {
+    if (!checkedValue(nameInput, errorMessage) || !checkedValue(positionInput, errorMessage)) {
       return;
     }
 
     // Проверка телефона
-    if (!checkedPhone(phoneInput)) {
+    if (!checkedPhone(phoneInput, errorMessage)) {
       return;
     }
 
@@ -504,8 +508,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Закрытие модального окна по клику на свободную область
   searchOverlay.addEventListener('click', closeSearchModal);
-
-
-  // Работа с телефоном
-  initPhoneInput(phoneInput);
 });

@@ -1,5 +1,9 @@
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 
+import { initPhoneInput } from './phone-mask.js';
+
+import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSameValue } from './validat.js';
+
 // Элементы попапа
 const editPopup = document.querySelector('#edit-popup');
 const popupNameInput = editPopup.querySelector('.popup__input--name');
@@ -10,6 +14,7 @@ const popupCancelButton = editPopup.querySelector('.popup__button-cancel');
 const popupOverlay = document.querySelector('.popup__overlay');
 
 let currentContactElement = null; // Контакт, который редактируется
+
 
 // Открытие попапа
 function openEditPopup(contactElement) {
@@ -33,11 +38,38 @@ function closeEditPopup() {
 popupSaveButton.addEventListener('click', () => {
   const newName = popupNameInput.value.trim();
   const newPosition = popupPositionInput.value.trim();
-  const newPhone = popupPhoneInput.value.trim();
+  const newPhone = popupPhoneInput.value;
 
   const oldName = currentContactElement.querySelector('.message__name').textContent;
   const oldPosition = currentContactElement.querySelector('.message__position').textContent;
   const oldPhone = currentContactElement.querySelector('.message__phone').textContent;
+
+  const inputs = [popupNameInput, popupPositionInput, popupPhoneInput];
+  const errorMessage = document.querySelector('.popup__error');
+
+  // Работа с телефоном
+  initPhoneInput(popupPhoneInput);
+
+  // Проверка пустых значений
+  if (!validateInputs(inputs, errorMessage)) {
+    return;
+  }
+
+  // Проверка идентичных значений
+  if (isContactExist(contactsStorage, newName, newPosition, newPhone)) {
+    showErrorSameValue(errorMessage);
+    return;
+  }
+
+  // Проверка имени и должности
+  if (!checkedValue(popupNameInput, errorMessage) || !checkedValue(popupPositionInput, errorMessage)) {
+    return;
+  }
+
+  // Проверка телефона
+  if (!checkedPhone(popupPhoneInput, errorMessage)) {
+    return;
+  }
 
   // Удаляем старый контакт из хранилища
   contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
