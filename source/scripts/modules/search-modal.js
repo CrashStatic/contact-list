@@ -2,17 +2,16 @@ import { deleteContact, getContactElement } from './contact.js';
 import { openEditPopup } from './edit-popup.js';
 import { contactsStorage } from './local-storage.js';
 
-const searchButton = document.querySelector('.buttons__button--search');
 const searchModal = document.querySelector('.modal');
 const searchInput = searchModal.querySelector('.modal__input');
 const searchArea = searchModal.querySelector('.modal__search-area');
 
-// Открытие модального окна
-searchButton.addEventListener('click', () => {
-  searchModal.classList.add('modal--open');
-  document.querySelector('.body').style.overflow = 'hidden';
-  searchModal.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
-});
+// // Открытие модального окна
+// searchButton.addEventListener('click', () => {
+//   searchModal.classList.add('modal--open');
+//   document.querySelector('.body').style.overflow = 'hidden';
+//   searchModal.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
+// });
 
 // Функция поиска контактов
 function searchContacts(query) {
@@ -98,3 +97,5 @@ document.querySelector('.modal').addEventListener('click', (e) => {
     deleteContact(e);
   }
 });
+
+export { searchModal };
