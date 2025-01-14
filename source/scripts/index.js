@@ -1,9 +1,11 @@
+import './modules/search-modal.js';
+
 import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
 import { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone } from './modules/validat.js';
 
 import { updateCounter } from './modules/counter.js';
-import { getContactElement, addContactToStorage } from './modules/contact.js';
+import { addContactToStorage } from './modules/contact.js';
 import { contactsStorage, loadContactsFromLocalStorage, saveContactsToLocalStorage } from './modules/local-storage.js';
 import { initPhoneInput } from './modules/phone-mask.js';
 
@@ -393,118 +395,118 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Элементы модального окна поиска
 
-  const searchButton = document.querySelector('.buttons__button--search');
-  const searchModal = document.querySelector('.modal');
-  const searchInput = searchModal.querySelector('.modal__input');
-  const searchArea = searchModal.querySelector('.modal__search-area');
-  const searchCloseButton = searchModal.querySelector('.modal__button-cancel');
-  const searchOverlay = searchModal.querySelector('.modal__overlay');
-  const showAllButton = searchModal.querySelector('.modal__button-show');
+  // const searchButton = document.querySelector('.buttons__button--search');
+  // const searchModal = document.querySelector('.modal');
+  // const searchInput = searchModal.querySelector('.modal__input');
+  // const searchArea = searchModal.querySelector('.modal__search-area');
+  // const searchCloseButton = searchModal.querySelector('.modal__button-cancel');
+  // const searchOverlay = searchModal.querySelector('.modal__overlay');
+  // const showAllButton = searchModal.querySelector('.modal__button-show');
 
-  // Открытие модального окна
-  searchButton.addEventListener('click', () => {
-    searchModal.classList.add('modal--open');
-    document.querySelector('.body').style.overflow = 'hidden';
-  });
+  // // Открытие модального окна
+  // searchButton.addEventListener('click', () => {
+  //   searchModal.classList.add('modal--open');
+  //   document.querySelector('.body').style.overflow = 'hidden';
+  // });
 
-  // Функция поиска контактов
-  function searchContacts(query) {
-    const results = [];
-    contactsStorage.forEach(({ name, position, phone }) => {
-      if (
-        name.toLowerCase().includes(query) ||
-        position.toLowerCase().includes(query) ||
-        phone.includes(query)
-      ) {
-        results.push({ name, position, phone });
-      }
-    });
-    return results;
-  }
+  // // Функция поиска контактов
+  // function searchContacts(query) {
+  //   const results = [];
+  //   contactsStorage.forEach(({ name, position, phone }) => {
+  //     if (
+  //       name.toLowerCase().includes(query) ||
+  //       position.toLowerCase().includes(query) ||
+  //       phone.includes(query)
+  //     ) {
+  //       results.push({ name, position, phone });
+  //     }
+  //   });
+  //   return results;
+  // }
 
-  // Отображение результатов поиска
-  function displaySearchResults(results) {
-    searchArea.innerHTML = ''; // Очищаем область результатов
+  // // Отображение результатов поиска
+  // function displaySearchResults(results) {
+  //   searchArea.innerHTML = ''; // Очищаем область результатов
 
-    if (results.length === 0) {
-      searchArea.textContent = 'No results found';
-      return;
-    }
+  //   if (results.length === 0) {
+  //     searchArea.textContent = 'No results found';
+  //     return;
+  //   }
 
-    results.forEach(({ name, position, phone }) => {
-      const contactElement = getContactElement(name, position, phone);
-      searchArea.appendChild(contactElement);
-    });
-  }
+  //   results.forEach(({ name, position, phone }) => {
+  //     const contactElement = getContactElement(name, position, phone);
+  //     searchArea.appendChild(contactElement);
+  //   });
+  // }
 
-  // Обработчик для ввода поиска
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim().toLowerCase();
-    if (query) {
-      const results = searchContacts(query);
-      displaySearchResults(results);
-    } else {
-      searchArea.innerHTML = ''; // Очищаем, если строка поиска пуста
-    }
-  });
+  // // Обработчик для ввода поиска
+  // searchInput.addEventListener('input', () => {
+  //   const query = searchInput.value.trim().toLowerCase();
+  //   if (query) {
+  //     const results = searchContacts(query);
+  //     displaySearchResults(results);
+  //   } else {
+  //     searchArea.innerHTML = ''; // Очищаем, если строка поиска пуста
+  //   }
+  // });
 
-  // Обработчик для кнопки Delete в модальном окне
-  searchArea.addEventListener('click', (event) => {
-    const deleteButton = event.target.closest('.message__delete');
-    if (deleteButton) {
-      const contactMessage = deleteButton.closest('.element__message');
-      if (contactMessage) {
-        const name = contactMessage.querySelector('.message__name').textContent;
-        const position = contactMessage.querySelector('.message__position').textContent;
-        const phone = contactMessage.querySelector('.message__phone').textContent;
-
-        // Удаляем из хранилища
-        contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
-
-        // Удаляем из модального окна
-        contactMessage.remove();
-
-        // Обновляем основной список
-        const firstLetter = name[0].toUpperCase();
-        const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
-        if (letterElement) {
-          const counterElement = letterElement.querySelector('.element__counter');
-          const contactsContainer = letterElement.querySelector('.element__contacts');
-          updateCounter(counterElement, contactsContainer);
-        }
-      }
-    }
-  });
-
-  // // Обработчик для кнопки Edit в модальном окне
+  // // Обработчик для кнопки Delete в модальном окне
   // searchArea.addEventListener('click', (event) => {
-  //   const editButton = event.target.closest('.message__edit');
-  //   if (editButton) {
-  //     const contactElement = editButton.closest('.element__message');
-  //     if (contactElement) {
-  //       openEditPopup(contactElement);
+  //   const deleteButton = event.target.closest('.message__delete');
+  //   if (deleteButton) {
+  //     const contactMessage = deleteButton.closest('.element__message');
+  //     if (contactMessage) {
+  //       const name = contactMessage.querySelector('.message__name').textContent;
+  //       const position = contactMessage.querySelector('.message__position').textContent;
+  //       const phone = contactMessage.querySelector('.message__phone').textContent;
+
+  //       // Удаляем из хранилища
+  //       contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+
+  //       // Удаляем из модального окна
+  //       contactMessage.remove();
+
+  //       // Обновляем основной список
+  //       const firstLetter = name[0].toUpperCase();
+  //       const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  //       if (letterElement) {
+  //         const counterElement = letterElement.querySelector('.element__counter');
+  //         const contactsContainer = letterElement.querySelector('.element__contacts');
+  //         updateCounter(counterElement, contactsContainer);
+  //       }
   //     }
   //   }
   // });
 
-  // Обработчик для кнопки "Show All" в модальном окне
+  // // // Обработчик для кнопки Edit в модальном окне
+  // // searchArea.addEventListener('click', (event) => {
+  // //   const editButton = event.target.closest('.message__edit');
+  // //   if (editButton) {
+  // //     const contactElement = editButton.closest('.element__message');
+  // //     if (contactElement) {
+  // //       openEditPopup(contactElement);
+  // //     }
+  // //   }
+  // // });
 
-  showAllButton.addEventListener('click', () => {
-    const allContacts = Array.from(contactsStorage.values());
-    displaySearchResults(allContacts);
-  });
+  // // Обработчик для кнопки "Show All" в модальном окне
 
-  // Функция закрытие модального окна поиска
-  function closeSearchModal() {
-    searchModal.classList.remove('modal--open');
-    searchInput.value = '';
-    searchArea.innerHTML = '';
-    document.querySelector('.body').style.overflow = 'auto';
-  }
+  // showAllButton.addEventListener('click', () => {
+  //   const allContacts = Array.from(contactsStorage.values());
+  //   displaySearchResults(allContacts);
+  // });
 
-  // Обработчик на закрытие модального окна
-  searchCloseButton.addEventListener('click', closeSearchModal);
+  // // Функция закрытие модального окна поиска
+  // function closeSearchModal() {
+  //   searchModal.classList.remove('modal--open');
+  //   searchInput.value = '';
+  //   searchArea.innerHTML = '';
+  //   document.querySelector('.body').style.overflow = 'auto';
+  // }
 
-  // Закрытие модального окна по клику на свободную область
-  searchOverlay.addEventListener('click', closeSearchModal);
+  // // Обработчик на закрытие модального окна
+  // searchCloseButton.addEventListener('click', closeSearchModal);
+
+  // // Закрытие модального окна по клику на свободную область
+  // searchOverlay.addEventListener('click', closeSearchModal);
 });

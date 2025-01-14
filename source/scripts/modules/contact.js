@@ -37,7 +37,7 @@ function addContactToStorage(name, position, phone, letterElement, saveToLocal =
 }
 
 // Функция удаления контакта из списка
-function deleteContact() {
+function deleteContact(event) {
   const contactMessage = event.target.closest('.message');
   const name = contactMessage.querySelector('.message__name').textContent;
   const position = contactMessage.querySelector('.message__position').textContent;
@@ -73,12 +73,11 @@ function deleteContact() {
     updateCounter(counterElement, contactsContainer);
   }
 
-  // Удаляем контакт из модального окна
-  contactMessage.remove();
 
   // Обновляем данные в localStorage
   saveContactsToLocalStorage();
 }
+
 
 // Раскрывающееся меню с контактами при взаимодействии с буквой
 function openContactInfo(event) {
@@ -99,19 +98,21 @@ function openContactInfo(event) {
 // Обработчики действий по клику
 document.querySelector('.contact-table').addEventListener('click', (e) => {
 
-  // Открытие информации о контактах по клику/табу
-  openContactInfo(e);
-
   // Удаление контакта по кнопке
   if (e.target.matches('.message__delete')) {
-    deleteContact();
+    deleteContact(e);
+    return;
   }
 
   // Редактирования контакта по кнопке
   if (e.target.matches('.message__edit')) {
     const contactElement = e.target.closest('.message');
     openEditPopup(contactElement);
+    return;
   }
+
+  // Открытие информации о контактах по клику
+  openContactInfo(e);
 });
 
 
@@ -119,19 +120,23 @@ document.querySelector('.contact-table').addEventListener('click', (e) => {
 document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
   if (evt.keyCode === 32 || evt.key === 'Enter') {
     evt.preventDefault();
-    openContactInfo(evt);
 
     // Удаление контакта по кнопке
     if (evt.target.matches('.message__delete')) {
-      deleteContact();
+      deleteContact(evt);
+      return;
     }
 
     // Редактирования контакта по кнопке
     if (evt.target.matches('.message__edit')) {
       const contactElement = evt.target.closest('.message');
       openEditPopup(contactElement);
+      return;
     }
+
+    // Открытие информации о контактах по табу
+    openContactInfo(evt);
   }
 });
 
-export { getContactElement, addContactToStorage };
+export { getContactElement, addContactToStorage, deleteContact };

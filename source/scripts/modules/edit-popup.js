@@ -1,7 +1,5 @@
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
-
 import { initPhoneInput } from './phone-mask.js';
-
 import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSameValue } from './validat.js';
 
 // Элементы попапа
@@ -11,7 +9,6 @@ const popupPositionInput = editPopup.querySelector('.popup__input--position');
 const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
 
 let currentContactElement = null; // Контакт, который редактируется
-
 
 // Открытие попапа
 function openEditPopup(contactElement) {
@@ -23,11 +20,21 @@ function openEditPopup(contactElement) {
   popupPhoneInput.value = contactElement.querySelector('.message__phone').textContent;
 
   editPopup.classList.add('popup--open');
+  editPopup.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
 }
 
 // Закрытие попапа
 function closeEditPopup() {
   editPopup.classList.remove('popup--open');
+
+  // Возвращаем фокус на редактируемый контакт - на кнопку редактирования
+  if (currentContactElement) {
+    const editButton = currentContactElement.querySelector('.message__edit');
+    if (editButton) {
+      editButton.focus(); // Устанавливаем фокус на кнопку редактирования
+    }
+  }
+
   currentContactElement = null;
 }
 
@@ -108,7 +115,7 @@ function saveEditPopup() {
 }
 
 // Обработчики действий
-document.addEventListener('click', (e) => {
+document.querySelector('.popup').addEventListener('click', (e) => {
 
   // Сохранение изменений
   if (e.target.matches('.popup__button-save')) {
