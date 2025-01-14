@@ -16,8 +16,8 @@
 
 .message__edit {
   &::before {
-    content: '';
-    background-image: url('../../images/pencil.png');
+    content: "";
+    background-image: url("../../images/pencil.png");
     background-size: 12px 12px;
     background-repeat: no-repeat;
     background-position: center;

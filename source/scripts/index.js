@@ -8,8 +8,8 @@ import { initPhoneInput } from './modules/phone-mask.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Заполняем столбцы буквами
-  const containerLeft = document.querySelector('.column__left');
-  const containerRight = document.querySelector('.column__right');
+  const containerLeft = document.querySelector('.column-left');
+  const containerRight = document.querySelector('.column-right');
 
   createColumn(ALPHABET_A_M, containerLeft);
   createColumn(ALPHABET_N_Z, containerRight);

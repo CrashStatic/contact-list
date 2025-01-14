@@ -26,17 +26,17 @@
         <fieldset class="interaction__fieldset inputs">
           <div class="inputs__wrapper">
             <label class="inputs__label" for="name">Name</label>
-            <input class="inputs__input input" id="name" type="text" placeholder="Ivan" required>
+            <input class="inputs__input input" id="name" name="name" type="text" placeholder="Ivan" required>
           </div>
 
           <div class="inputs__wrapper">
             <label class="inputs__label" for="position">Position</label>
-            <input class="inputs__input input" id="position" type="text" placeholder="Developer" required>
+            <input class="inputs__input input" id="position" name="position" type="text" placeholder="Developer" required>
           </div>
 
           <div class="inputs__wrapper">
             <label class="inputs__label" for="phone">Phone</label>
-            <input class="inputs__input input" id="phone" type="text" placeholder="+7 999 999 99 99" required>
+            <input class="inputs__input input" id="phone" name="phone" type="text" placeholder="+7 999 999 99 99" required>
           </div>
         </fieldset>
 
@@ -52,8 +52,8 @@
 
     <section class="contact-table" aria-live="assertive">
       <h2 class="visually-hidden">Contact table</h2>
-      <div class="contact-table__column column column__left"></div>
-      <div class="contact-table__column column column__right"></div>
+      <div class="contact-table__column column column-left"></div>
+      <div class="contact-table__column column column-right"></div>
     </section>
   </main>
 
@@ -67,15 +67,15 @@
       <form class="popup__form" action="#" method="post" name="popup-contact-add">
         <label>
           Name:
-          <input class="popup__input popup__input--name input" type="text" placeholder="Ivan" required />
+          <input class="popup__input popup__input--name input" name="popup-name" type="text" placeholder="Ivan" required>
         </label>
         <label>
           Position:
-          <input class="popup__input popup__input--position input" type="text" placeholder="Developer" required />
+          <input class="popup__input popup__input--position input" name="popup-position" type="text" placeholder="Developer" required>
         </label>
         <label>
           Phone:
-          <input class="popup__input popup__input--phone input" type="text" placeholder="+7 999 999 99 99" required />
+          <input class="popup__input popup__input--phone input" type="text" name="popup-phone" placeholder="+7 999 999 99 99" required>
         </label>
         <button class="popup__button-save button" type="button" aria-label="Save contact">Save</button>
       </form>
@@ -88,7 +88,7 @@
     <div class="modal__container">
       <h2>Search contact</h2>
       <button class="modal__button-cancel interaction-button" type="button" aria-label="Cancel modal"></button>
-      <input class="modal__input input" type="text" placeholder="Search..." required />
+      <input class="modal__input input" id="search" name="search" type="text" placeholder="Search..." required>
       <div class="modal__search-area"></div>
       <button class="modal__button-show button" type="button" aria-label="Show all contacts">Show all</button>
     </div>
