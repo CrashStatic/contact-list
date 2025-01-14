@@ -9,9 +9,6 @@ const editPopup = document.querySelector('#edit-popup');
 const popupNameInput = editPopup.querySelector('.popup__input--name');
 const popupPositionInput = editPopup.querySelector('.popup__input--position');
 const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
-const popupSaveButton = editPopup.querySelector('.popup__button-save');
-const popupCancelButton = editPopup.querySelector('.popup__button-cancel');
-const popupOverlay = document.querySelector('.popup__overlay');
 
 let currentContactElement = null; // Контакт, который редактируется
 
@@ -35,7 +32,7 @@ function closeEditPopup() {
 }
 
 // Сохранение изменений в попапе
-popupSaveButton.addEventListener('click', () => {
+function saveEditPopup() {
   const newName = popupNameInput.value.trim();
   const newPosition = popupPositionInput.value.trim();
   const newPhone = popupPhoneInput.value;
@@ -108,12 +105,25 @@ popupSaveButton.addEventListener('click', () => {
   saveContactsToLocalStorage();
 
   closeEditPopup();
+}
+
+// Обработчики действий
+document.addEventListener('click', (e) => {
+
+  // Сохранение изменений
+  if (e.target.matches('.popup__button-save')) {
+    saveEditPopup();
+  }
+
+  // Закрытие попапа по клику на свободную область
+  if (e.target.matches('.popup__overlay')) {
+    closeEditPopup();
+  }
+
+  // Отмена редактирования и закрытие попапа
+  if (e.target.matches('.popup__button-cancel')) {
+    closeEditPopup();
+  }
 });
-
-// Закрытие попапа по клику на свободную область
-popupOverlay.addEventListener('click', closeEditPopup);
-
-// Отмена редактирования и закрытие попапа
-popupCancelButton.addEventListener('click', closeEditPopup);
 
 export { openEditPopup };

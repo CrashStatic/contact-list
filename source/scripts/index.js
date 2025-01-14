@@ -273,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Функция очищения всего списка
-
   const clearButton = document.querySelector('.buttons__button--clear');
 
   const clearAllContacts = () => {
