@@ -1,3 +1,4 @@
+import { COLUMN_ELEMENT_SELECTOR } from './constants.js';
 import { addContactToStorage } from './contact.js';
 
 const contactsStorage = new Map(); // Хранилище контактов
@@ -11,13 +12,14 @@ function loadContactsFromLocalStorage() {
       if (Array.isArray(contacts)) {
         contacts.forEach(({ name, position, phone }) => {
           const firstLetter = name[0].toUpperCase();
-          const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+          const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
           if (letterElement) {
             addContactToStorage(name, position, phone, letterElement);
           }
         });
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Ошибка парсинга данных из localStorage:', error);
     }
   }

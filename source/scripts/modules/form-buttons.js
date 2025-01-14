@@ -3,6 +3,7 @@ import { addContactToStorage } from './contact.js';
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { updateCounter } from './counter.js';
 import { searchModal } from './search-modal.js';
+import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
 
 const nameInput = document.getElementById('name');
 const positionInput = document.getElementById('position');
@@ -39,7 +40,7 @@ function addContactToList() {
   }
 
   const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
-  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
 
   addContactToStorage(name, position, phone, letterElement);
 
@@ -51,14 +52,14 @@ function addContactToList() {
 
 // Функция очищения всего списка
 function clearAllContacts() {
-  document.querySelectorAll('.column__element').forEach((letterElement) => {
-    const contactsContainer = letterElement.querySelector('.element__contacts');
+  document.querySelectorAll(COLUMN_ELEMENT_SELECTOR).forEach((letterElement) => {
+    const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
 
     // Удаляем все контакты
     contactsContainer.innerHTML = '';
 
     // Обновляем счётчик
-    const counterElement = letterElement.querySelector('.element__counter');
+    const counterElement = letterElement.querySelector(COUNTER_SELECTOR);
     updateCounter(counterElement, contactsContainer);
   });
 

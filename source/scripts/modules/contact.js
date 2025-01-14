@@ -1,14 +1,15 @@
 import { updateCounter } from './counter.js';
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { openEditPopup } from './edit-popup.js';
+import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 
 // Функция создания контакта
 const getContactElement = (name, position, phone) => {
   const letterTemplate = document.querySelector('#message').content.querySelector('.message');
   const contactElement = letterTemplate.cloneNode(true);
-  contactElement.querySelector('.message__name').textContent = name;
-  contactElement.querySelector('.message__position').textContent = position;
-  contactElement.querySelector('.message__phone').textContent = phone;
+  contactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent = name;
+  contactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent = position;
+  contactElement.querySelector(MESSAGE_PHONE_SELECTOR).textContent = phone;
   return contactElement;
 };
 
@@ -20,11 +21,11 @@ function addContactToStorage(name, position, phone, letterElement, saveToLocal =
   const contactElement = getContactElement(name, position, phone);
 
   // Добавляем контакт в DOM
-  const contactsContainer = letterElement.querySelector('.element__contacts');
+  const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
   contactsContainer.append(contactElement); // Добавляем контакт
 
   // Обновляем счётчик
-  const counterElement = letterElement.querySelector('.element__counter');
+  const counterElement = letterElement.querySelector(COUNTER_SELECTOR);
   updateCounter(counterElement, contactsContainer);
 
   // Сохраняем контакт в хранилище
@@ -39,9 +40,9 @@ function addContactToStorage(name, position, phone, letterElement, saveToLocal =
 // Функция удаления контакта из списка
 function deleteContact(event) {
   const contactMessage = event.target.closest('.message');
-  const name = contactMessage.querySelector('.message__name').textContent;
-  const position = contactMessage.querySelector('.message__position').textContent;
-  const phone = contactMessage.querySelector('.message__phone').textContent;
+  const name = contactMessage.querySelector(MESSAGE_NAME_SELECTOR).textContent;
+  const position = contactMessage.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
+  const phone = contactMessage.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
   // Удаляем из хранилища
   contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
@@ -51,16 +52,16 @@ function deleteContact(event) {
 
   // Обновляем данные в основном списке
   const firstLetter = name[0].toUpperCase();
-  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest('.column__element');
+  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
 
   if (letterElement) {
-    const contactsContainer = letterElement.querySelector('.element__contacts');
+    const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
     const contactElements = contactsContainer.querySelectorAll('.element__message');
 
     contactElements.forEach((contact) => {
-      const contactName = contact.querySelector('.message__name').textContent;
-      const contactPosition = contact.querySelector('.message__position').textContent;
-      const contactPhone = contact.querySelector('.message__phone').textContent;
+      const contactName = contact.querySelector(MESSAGE_NAME_SELECTOR).textContent;
+      const contactPosition = contact.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
+      const contactPhone = contact.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
       // Удаляем только нужный контакт
       if (contactName === name && contactPosition === position && contactPhone === phone) {
@@ -69,7 +70,7 @@ function deleteContact(event) {
     });
 
     // Обновляем счётчик для буквы
-    const counterElement = letterElement.querySelector('.element__counter');
+    const counterElement = letterElement.querySelector(COUNTER_SELECTOR);
     updateCounter(counterElement, contactsContainer);
   }
 
@@ -81,9 +82,9 @@ function deleteContact(event) {
 
 // Раскрывающееся меню с контактами при взаимодействии с буквой
 function openContactInfo(event) {
-  if (event.target.closest('.column__element')) {
+  if (event.target.closest(COLUMN_ELEMENT_SELECTOR)) {
     const currentBtn = event.target.closest('.element');
-    const currentContent = currentBtn.querySelector('.element__contacts');
+    const currentContent = currentBtn.querySelector(CONTACTS_SELECTOR);
 
     currentContent.classList.toggle('element__contacts--open');
 
