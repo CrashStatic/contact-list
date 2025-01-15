@@ -1,6 +1,7 @@
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { initPhoneInput } from './phone-mask.js';
+import { isEscapeKey } from './util.js';
 import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSameValue } from './validat.js';
 
 // Элементы попапа
@@ -22,6 +23,7 @@ function openEditPopup(contactElement) {
 
   editPopup.classList.add('popup--open');
   editPopup.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
+  document.addEventListener('keydown', onDocumentKeydown);
 }
 
 // Закрытие попапа
@@ -133,5 +135,13 @@ document.querySelector('.popup').addEventListener('click', (e) => {
     closeEditPopup();
   }
 });
+
+// Закрфтие попапа через Escape
+function onDocumentKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeEditPopup();
+  }
+}
 
 export { openEditPopup };

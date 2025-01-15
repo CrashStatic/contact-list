@@ -91,4 +91,4 @@ document.querySelector('.modal').addEventListener('click', (e) => {
   }
 });
 
-export { searchModal };
+export { searchModal, closeSearchModal };

@@ -2,8 +2,9 @@ import { validateInputs, showErrorSameValue, isContactExist, checkedValue, check
 import { addContactToStorage } from './contact.js';
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { updateCounter } from './counter.js';
-import { searchModal } from './search-modal.js';
+import { closeSearchModal, searchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
+import { isEscapeKey } from './util.js';
 
 const nameInput = document.getElementById('name');
 const positionInput = document.getElementById('position');
@@ -75,6 +76,7 @@ function openSearchModal() {
   searchModal.classList.add('modal--open');
   document.querySelector('.body').style.overflow = 'hidden';
   searchModal.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
+  document.addEventListener('keydown', onDocumentKeydown);
 }
 
 document.querySelector('.buttons').addEventListener('click', (e) => {
@@ -96,5 +98,13 @@ document.querySelector('.buttons').addEventListener('click', (e) => {
   }
 
 });
+
+// Закрытие модального окна через Escape
+function onDocumentKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSearchModal();
+  }
+}
 
 export { phoneInput };
