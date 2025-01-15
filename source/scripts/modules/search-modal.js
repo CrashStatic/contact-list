@@ -1,4 +1,4 @@
-import { deleteContact, getContactElement } from './contact.js';
+import { deleteContact, renderContactElement } from './contact.js';
 import { openEditPopup } from './edit-popup.js';
 import { contactsStorage } from './local-storage.js';
 
@@ -31,7 +31,7 @@ function displaySearchResults(results) {
   }
 
   results.forEach(({ name, position, phone }) => {
-    const contactElement = getContactElement(name, position, phone);
+    const contactElement = renderContactElement(name, position, phone);
     searchArea.appendChild(contactElement);
   });
 }
