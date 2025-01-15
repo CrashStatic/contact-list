@@ -87,7 +87,7 @@ function saveEditPopup() {
   currentContactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent = newPosition;
   currentContactElement.querySelector(MESSAGE_PHONE_SELECTOR).textContent = newPhone;
 
-  // Обновляем данные в основном списке через взаимодействие в модальном окне
+  // Обновляем данные в основном списке через взаимодействие в попапе
   const firstLetter = oldName[0].toUpperCase();
   const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
 

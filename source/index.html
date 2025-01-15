@@ -24,6 +24,7 @@
       <h2 class="visually-hidden">Contact information form</h2>
       <form class="interaction__form" action="#" method="post" name="contact-add">
         <fieldset class="interaction__fieldset inputs">
+          <legend class="visually-hidden">Contact Info</legend>
           <div class="inputs__wrapper">
             <label class="inputs__label" for="name">Name</label>
             <input class="inputs__input input" id="name" name="name" type="text" placeholder="Ivan" required>
@@ -88,7 +89,7 @@
     <div class="modal__container">
       <h2>Search contact</h2>
       <button class="modal__button-cancel interaction-button" type="button" aria-label="Cancel modal"></button>
-      <input class="modal__input input" id="search" name="search" type="text" placeholder="Search..." required>
+      <input class="modal__input input" name="search" type="text" placeholder="Search..." required>
       <div class="modal__search-area"></div>
       <button class="modal__button-show button" type="button" aria-label="Show all contacts">Show all</button>
     </div>
@@ -98,10 +99,10 @@
   <template id="letter">
     <div class="column__element element">
       <div class="element__container">
-        <div data-id="a" class="element__letter">A</div>
-        <span class="element__counter">0</span> <!-- Добавляем счётчик -->
+        <div class="element__letter" data-id="a">A</div>
+        <span class="element__counter">0</span>
       </div>
-      <div class="element__contacts"></div> <!-- Контейнер для контактов -->
+      <div class="element__contacts"></div>
     </div>
   </template>
 
