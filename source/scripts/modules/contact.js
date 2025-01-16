@@ -37,7 +37,7 @@ function renderColumn(letter, contacts) {
 }
 
 // Добавление контакта в DOM и запись в хранилище
-function addContactToStorage(name, position, phone, letterElement, saveToLocal = true) {
+function addContactToStorage(name, position, phone, saveToLocal = true) {
 
   // Сохраняем контакт в хранилище
   contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
