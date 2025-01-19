@@ -1,21 +1,13 @@
 .interaction-button {
-  display: block;
+  display: flex;
   width: 20px;
   height: 20px;
   position: relative;
   background-color: #efbae2;
   border: 1px solid #a49898;
   cursor: pointer;
-
-  &::before {
-    content: "x";
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-  }
+  justify-content: center;
+  align-items: center;
 
   &:hover,
   &:focus-visible {

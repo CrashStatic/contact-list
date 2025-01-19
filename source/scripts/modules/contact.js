@@ -96,13 +96,13 @@ function openContactInfo(event) {
 document.querySelector('.contact-table').addEventListener('click', (e) => {
 
   // Удаление контакта по кнопке
-  if (e.target.matches('.message__delete')) {
+  if (e.target.closest('.js-delete-contact-button')) {
     deleteContact(e);
     return;
   }
 
   // Редактирования контакта по кнопке
-  if (e.target.matches('.message__edit')) {
+  if (e.target.closest('.js-edit-contact-button')) {
     const contactElement = e.target.closest('.message');
     openEditPopup(contactElement);
     return;
@@ -119,7 +119,7 @@ document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
     evt.preventDefault();
 
     // Удаление контакта по кнопке
-    if (evt.target.matches('.message__delete')) {
+    if (evt.target.matches('.js-delete-contact-button')) {
       deleteContact(evt);
       return;
     }

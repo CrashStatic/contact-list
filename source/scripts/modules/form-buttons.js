@@ -16,7 +16,7 @@ function addContactToList() {
   const position = positionInput.value.trim();
   const phone = phoneInput.value.trim();
 
-  const errorMessage = document.querySelector('.interaction__error');
+  const errorMessage = document.querySelector('.form__error');
   const inputs = [nameInput, positionInput, phoneInput];
 
   // Проверка пустых значений
@@ -79,21 +79,21 @@ function openSearchModal() {
   document.addEventListener('keydown', onDocumentKeydown);
 }
 
-document.querySelector('.buttons').addEventListener('click', (e) => {
+document.querySelector('.form__buttons').addEventListener('click', (e) => {
 
   // Обработчик для кнопки ADD
-  if (e.target.matches('.buttons__button--add')) {
+  if (e.target.matches('.js-add-contact-button')) {
     e.preventDefault();
     addContactToList();
   }
 
   // Обработчик на кнопку Clear List
-  if (e.target.matches('.buttons__button--clear')) {
+  if (e.target.matches('.js-clear-contact-button')) {
     clearAllContacts();
   }
 
   // Обработчик на кнопку Search
-  if (e.target.matches('.buttons__button--search')) {
+  if (e.target.matches('.js-search-contact-button')) {
     openSearchModal();
   }
 

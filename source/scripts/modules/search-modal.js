@@ -70,7 +70,7 @@ document.querySelector('.modal').addEventListener('click', (e) => {
   }
 
   // Закрытие модального окна по клику на кнопку закрытия
-  if (e.target.matches('.modal__button-cancel')) {
+  if (e.target.closest('.modal__button-cancel')) {
     closeSearchModal();
   }
 
@@ -80,13 +80,13 @@ document.querySelector('.modal').addEventListener('click', (e) => {
   }
 
   // Редактирования контакта по кнопке
-  if (e.target.matches('.message__edit')) {
+  if (e.target.closest('.js-edit-contact-button')) {
     const contactElement = e.target.closest('.message');
     openEditPopup(contactElement);
   }
 
   // Закрытие моального окна по кнопке Delete
-  if (e.target.matches('.message__delete')) {
+  if (e.target.closest('.js-delete-contact-button')) {
     deleteContact(e);
   }
 });

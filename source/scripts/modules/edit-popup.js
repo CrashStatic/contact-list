@@ -6,9 +6,9 @@ import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSa
 
 // Элементы попапа
 const editPopup = document.querySelector('#edit-popup');
-const popupNameInput = editPopup.querySelector('.popup__input--name');
-const popupPositionInput = editPopup.querySelector('.popup__input--position');
-const popupPhoneInput = editPopup.querySelector('.popup__input--phone');
+const popupNameInput = editPopup.querySelector('input[name="popup-name"]');
+const popupPositionInput = editPopup.querySelector('input[name="popup-position"]');
+const popupPhoneInput = editPopup.querySelector('input[name="popup-phone"]');
 
 let currentContactElement = null; // Контакт, который редактируется
 
@@ -121,7 +121,7 @@ function saveEditPopup() {
 document.querySelector('.popup').addEventListener('click', (e) => {
 
   // Сохранение изменений
-  if (e.target.matches('.popup__button-save')) {
+  if (e.target.matches('.form__button--popup-save')) {
     saveEditPopup();
   }
 
@@ -131,7 +131,7 @@ document.querySelector('.popup').addEventListener('click', (e) => {
   }
 
   // Отмена редактирования и закрытие попапа
-  if (e.target.matches('.popup__button-cancel')) {
+  if (e.target.closest('.popup__button-cancel')) {
     closeEditPopup();
   }
 });

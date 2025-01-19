@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: row;
   gap: 20px;
+
+  &--popup {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .inputs__wrapper {

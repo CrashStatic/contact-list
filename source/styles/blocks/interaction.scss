@@ -1,24 +1,3 @@
 .interaction {
   margin-bottom: 40px;
 }
-
-.interaction__form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 45px;
-  position: relative;
-}
-
-.interaction__fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
-.interaction__error {
-  position: absolute;
-  bottom: 42.5px;
-  color: #ff0000;
-  font-size: 16px;
-}
