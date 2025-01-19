@@ -40,11 +40,11 @@ function renderColumn(letter, contacts) {
 function addContactToStorage(name, position, phone, saveToLocal = true) {
 
   // Сохраняем контакт в хранилище
-  contactsStorage.set(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`, { name, position, phone });
+  contactsStorage.push({ name, position, phone });
 
   // Обновляем колонку
   const firstLetter = name[0].toUpperCase();
-  const updatedContacts = Array.from(contactsStorage.values()).filter((contact) => contact.name[0].toUpperCase() === firstLetter);
+  const updatedContacts = contactsStorage.filter((contact) => contact.name[0].toUpperCase() === firstLetter);
   renderColumn(firstLetter, updatedContacts);
 
   // Сохраняем в localStorage, если нужно
@@ -61,14 +61,20 @@ function deleteContact(event) {
   const phone = contactMessage.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
   // Удаляем из хранилища
-  contactsStorage.delete(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+  const contactIndex = contactsStorage.findIndex((contact) =>
+    contact.name === name && contact.position === position && contact.phone === phone
+  );
+
+  if (contactIndex !== -1) {
+    contactsStorage.splice(contactIndex, 1); // Удаляем контакт
+  }
 
   // Удаляем из DOM
   contactMessage.remove();
 
   // Рендерим колонку заново
   const firstLetter = name[0].toUpperCase();
-  const updatedContacts = Array.from(contactsStorage.values()).filter((contact) => contact.name[0].toUpperCase() === firstLetter);
+  const updatedContacts = contactsStorage.filter((contact) => contact.name[0].toUpperCase() === firstLetter);
   renderColumn(firstLetter, updatedContacts);
 
   // Обновляем localStorage

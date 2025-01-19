@@ -1,7 +1,7 @@
 import { COLUMN_ELEMENT_SELECTOR } from './constants.js';
 import { addContactToStorage } from './contact.js';
 
-const contactsStorage = new Map(); // Хранилище контактов
+const contactsStorage = []; // Хранилище контактов
 
 // Загрузка контактов из localStorage
 function loadContactsFromLocalStorage() {
@@ -27,8 +27,7 @@ function loadContactsFromLocalStorage() {
 
 // Сохранение контактов в localStorage
 function saveContactsToLocalStorage() {
-  const contactsArray = Array.from(contactsStorage.values());
-  localStorage.setItem('contacts', JSON.stringify(contactsArray));
+  localStorage.setItem('contacts', JSON.stringify(contactsStorage));
 }
 
 export { contactsStorage, loadContactsFromLocalStorage, saveContactsToLocalStorage };

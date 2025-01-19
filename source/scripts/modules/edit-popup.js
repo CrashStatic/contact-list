@@ -79,10 +79,16 @@ function saveEditPopup() {
   }
 
   // Удаляем старый контакт из хранилища
-  contactsStorage.delete(`${oldName.toLowerCase()}|${oldPosition.toLowerCase()}|${oldPhone}`);
+  const oldIndex = contactsStorage.findIndex((contact) =>
+    contact.name === oldName && contact.position === oldPosition && contact.phone === oldPhone
+  );
 
-  // Обновляем контакт в хранилище
-  contactsStorage.set(`${newName.toLowerCase()}|${newPosition.toLowerCase()}|${newPhone}`, { name: newName, position: newPosition, phone: newPhone });
+  if (oldIndex !== -1) {
+    contactsStorage.splice(oldIndex, 1); // Удаляем старый контакт
+  }
+
+  // Добавляем обновленный контакт в хранилище
+  contactsStorage.push({ name: newName, position: newPosition, phone: newPhone });
 
   // Обновляем данные в DOM
   currentContactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent = newName;

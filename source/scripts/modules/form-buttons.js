@@ -65,7 +65,7 @@ function clearAllContacts() {
   });
 
   // Очищаем хранилище
-  contactsStorage.clear();
+  contactsStorage.length = 0;
 
   // Обновляем данные в localStorage
   saveContactsToLocalStorage();

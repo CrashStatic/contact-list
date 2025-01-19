@@ -37,7 +37,11 @@ function resetErrors(input, errorMessage) {
 
 // Проверка на существование контакта
 function isContactExist(storage, name, position, phone) {
-  return storage.has(`${name.toLowerCase()}|${position.toLowerCase()}|${phone}`);
+  return storage.find((contact) =>
+    contact.name.toLowerCase() === name.toLowerCase() &&
+    contact.position.toLowerCase() === position.toLowerCase() &&
+    contact.phone === phone
+  ) !== undefined;
 }
 
 // Функция вывода ошибки при добавлении уже существующего контакта

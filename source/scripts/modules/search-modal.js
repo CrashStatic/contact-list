@@ -49,8 +49,7 @@ searchInput.addEventListener('input', () => {
 
 // Функция для кнопки "Show All" в модальном окне
 function showAllContacts() {
-  const allContacts = Array.from(contactsStorage.values());
-  displaySearchResults(allContacts);
+  displaySearchResults(contactsStorage);
 }
 
 // Функция закрытие модального окна поиска
