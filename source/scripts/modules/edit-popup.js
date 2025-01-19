@@ -6,9 +6,9 @@ import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSa
 
 // Элементы попапа
 const editPopup = document.querySelector('#edit-popup');
-const popupNameInput = editPopup.querySelector('input[name="popup-name"]');
-const popupPositionInput = editPopup.querySelector('input[name="popup-position"]');
-const popupPhoneInput = editPopup.querySelector('input[name="popup-phone"]');
+const popupNameInput = editPopup.querySelector('#popup-name');
+const popupPositionInput = editPopup.querySelector('#popup-position');
+const popupPhoneInput = editPopup.querySelector('#popup-phone');
 
 let currentContactElement = null; // Контакт, который редактируется
 
