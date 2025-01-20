@@ -39,7 +39,7 @@
   border: 1px solid #a49898;
 }
 
-.modal__button-cancel {
+.modal__close-button {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -47,9 +47,11 @@
   height: 25px;
 }
 
-.modal__label {
+.modal__body {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  margin-bottom: 20px;
+  gap: 20px;
 }
 
 .modal__input {
@@ -59,10 +61,14 @@
 .modal__search-area {
   width: 100%;
   height: 350px;
-  margin-bottom: 20px;
   background-color: #d3bcef;
   border-radius: 5px;
   border: 1px solid #a49898;
   padding: 10px;
   overflow: auto;
+}
+
+.modal__button-show {
+  width: max-content;
+  align-self: center;
 }

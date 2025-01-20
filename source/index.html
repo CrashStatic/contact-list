@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="description" content="An application for recording contacts">
+  <meta name="keywords" content="contacts, phonebook, contact list">
   <title>Contact List</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" href="./favicons/favicon.ico">
@@ -61,7 +62,7 @@
 
 
   <!-- Попап редактирования контакта -->
-  <dialog class="popup" id="edit-popup">
+  <!-- <dialog class="popup" id="edit-popup">
     <div class="popup__overlay"></div>
     <div class="popup__container">
       <h2 class="popup__title">Edit Contact</h2>
@@ -89,10 +90,10 @@
         <button class="form__button form__button--popup-save button" type="button" aria-label="Save contact">Save</button>
       </form>
     </div>
-  </dialog>
+  </dialog> -->
 
   <!-- Модальное окно поиска -->
-  <dialog class="modal" id="modal">
+  <!-- <dialog class="modal" id="modal">
     <div class="modal__overlay"></div>
     <div class="modal__container">
       <h2>Search contact</h2>
@@ -107,7 +108,42 @@
       <div class="modal__search-area"></div>
       <button class="modal__button-show button" type="button" aria-label="Show all contacts">Show all</button>
     </div>
+  </dialog> -->
+
+  <dialog class="modal" id="modal">
+    <div class="modal__overlay"></div>
+    <div class="modal__container">
+      <div class="modal__header">
+        <h2 class="modal__title">Search contact</h2>
+        <button class="modal__close-button interaction-button" type="button" aria-label="Cancel modal">
+          <svg aria-hidden="true" focusable="false" width="14" height="14">
+            <use href="icons/stack.svg#cross"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body" id="modal-body"></div>
+    </div>
   </dialog>
+
+   <!-- Шаблон окна поиска -->
+  <template id="search-modal-content">
+    <label class="modal__label">
+      <input class="modal__input input" name="search" type="text" placeholder="Search..." required>
+    </label>
+    <div class="modal__search-area"></div>
+    <button class="modal__button-show button" type="button" aria-label="Show all contacts">Show all</button>
+  </template>
+
+   <!-- Шаблон попапа -->
+  <template id="edit-modal-content">
+    <label class="modal__label">Name</label>
+    <input class="modal__input input" name="popup-name" type="text" placeholder="Ivan" required>
+    <label class="modal__label">Position</label>
+    <input class="modal__input input" name="popup-position" type="text" placeholder="Developer" required>
+    <label class="modal__label">Phone</label>
+    <input class="modal__input input" name="popup-phone" type="text" placeholder="+7 999 999 99 99" required>
+    <button class="modal__button-save button" type="button">Save</button>
+  </template>
 
   <!-- Шаблон буквы -->
   <template id="letter">

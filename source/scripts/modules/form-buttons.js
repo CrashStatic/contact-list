@@ -1,8 +1,8 @@
 import { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues } from './validat.js';
 import { updateCounter } from './counter.js';
-import { closeSearchModal, searchModal } from './search-modal.js';
+import { openSearchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
-import { isEscapeKey } from './util.js';
+// import { isEscapeKey } from './util.js';
 import { addContact } from './contact.js';
 import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
 
@@ -66,14 +66,6 @@ function clearAllContacts() {
   clearAllContactsInStorage();
 }
 
-// Функция открытия модального окна поиска
-function openSearchModal() {
-  searchModal.classList.add('modal--open');
-  document.querySelector('.body').style.overflow = 'hidden';
-  searchModal.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
-  document.addEventListener('keydown', onDocumentKeydown);
-}
-
 document.querySelector('.form__buttons').addEventListener('click', (e) => {
 
   // Обработчик для кнопки ADD
@@ -93,13 +85,5 @@ document.querySelector('.form__buttons').addEventListener('click', (e) => {
   }
 
 });
-
-// Закрытие модального окна через Escape
-function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeSearchModal();
-  }
-}
 
 export { nameInput, positionInput, phoneInput };
