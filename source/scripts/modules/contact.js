@@ -1,7 +1,7 @@
 import { updateCounter } from './counter.js';
-import { openEditPopup } from './edit-popup.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager.js';
+import { openEditPopup } from './search-modal.js';
 
 // Функция рендеринга одного контакта
 function renderContactElement(name, position, phone) {
