@@ -1,10 +1,11 @@
 import { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues } from './validat.js';
-import { addContactToStorage } from './contact.js';
-import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
+import { saveContacts } from './local-storage.js';
 import { updateCounter } from './counter.js';
 import { closeSearchModal, searchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
 import { isEscapeKey } from './util.js';
+import { addContact } from './contact.js';
+import { getContacts } from './contact-manager.js';
 
 const nameInput = document.getElementById('name');
 const positionInput = document.getElementById('position');
@@ -25,7 +26,7 @@ function addContactToList() {
   }
 
   // Проверка идентичных значений
-  if (validateSameValues(contactsStorage, name, position, phone, errorMessage)) {
+  if (validateSameValues(getContacts(), name, position, phone, errorMessage)) {
     return;
   }
 
@@ -42,7 +43,7 @@ function addContactToList() {
   const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
   const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
 
-  addContactToStorage(name, position, phone, letterElement);
+  addContact(name, position, phone, letterElement);
 
   // Очищаем поля ввода
   nameInput.value = '';
@@ -64,10 +65,11 @@ function clearAllContacts() {
   });
 
   // Очищаем хранилище
+  const contactsStorage = getContacts();
   contactsStorage.length = 0;
 
-  // Обновляем данные в localStorage
-  saveContactsToLocalStorage();
+  // Сохраняем обновленное состояние в localStorage
+  saveContacts(contactsStorage);
 }
 
 // Функция открытия модального окна поиска
@@ -106,4 +108,4 @@ function onDocumentKeydown (evt) {
   }
 }
 
-export { phoneInput };
+export { nameInput, positionInput, phoneInput };

@@ -1,25 +1,10 @@
+import { getContacts, searchContacts } from './contact-manager.js';
 import { deleteContact, renderContactElement } from './contact.js';
 import { openEditPopup } from './edit-popup.js';
-import { contactsStorage } from './local-storage.js';
 
 const searchModal = document.querySelector('.modal');
 const searchInput = searchModal.querySelector('.modal__input');
 const searchArea = searchModal.querySelector('.modal__search-area');
-
-// Функция поиска контактов
-function searchContacts(query) {
-  const results = [];
-  contactsStorage.forEach(({ name, position, phone }) => {
-    if (
-      name.toLowerCase().includes(query) ||
-      position.toLowerCase().includes(query) ||
-      phone.includes(query)
-    ) {
-      results.push({ name, position, phone });
-    }
-  });
-  return results;
-}
 
 // Отображение результатов поиска
 function displaySearchResults(results) {
@@ -40,8 +25,8 @@ function displaySearchResults(results) {
 searchInput.addEventListener('input', () => {
   const query = searchInput.value.trim().toLowerCase();
   if (query) {
-    const results = searchContacts(query);
-    displaySearchResults(results);
+    const results = searchContacts(query); // Ищем контакты по запросу
+    displaySearchResults(results); // Отображаем результаты
   } else {
     searchArea.innerHTML = ''; // Очищаем, если строка поиска пуста
   }
@@ -49,7 +34,8 @@ searchInput.addEventListener('input', () => {
 
 // Функция для кнопки "Show All" в модальном окне
 function showAllContacts() {
-  displaySearchResults(contactsStorage);
+  const allContacts = getContacts(); // Получаем все контакты из localStorage
+  displaySearchResults(allContacts); // Отображаем все контакты
 }
 
 // Функция закрытие модального окна поиска

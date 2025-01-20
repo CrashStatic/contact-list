@@ -1,7 +1,7 @@
 import { updateCounter } from './counter.js';
-import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { openEditPopup } from './edit-popup.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
+import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager.js';
 
 // Функция рендеринга одного контакта
 function renderContactElement(name, position, phone) {
@@ -36,21 +36,19 @@ function renderColumn(letter, contacts) {
   }
 }
 
-// Добавление контакта в DOM и запись в хранилище
-function addContactToStorage(name, position, phone, saveToLocal = true) {
-
-  // Сохраняем контакт в хранилище
-  contactsStorage.push({ name, position, phone });
-
-  // Обновляем колонку
-  const firstLetter = name[0].toUpperCase();
-  const updatedContacts = contactsStorage.filter((contact) => contact.name[0].toUpperCase() === firstLetter);
-  renderColumn(firstLetter, updatedContacts);
-
-  // Сохраняем в localStorage, если нужно
-  if (saveToLocal) {
-    saveContactsToLocalStorage();
+// Функция для добавления контакта в хранилище и рендеринга
+function addContact(name, position, phone, letterElement, shouldSave = true) {
+  // Если необходимо, добавляем контакт в хранилище
+  if (shouldSave) {
+    addContactToStorage(name, position, phone);
   }
+
+  // Извлекаем первую букву из letterElement, если это DOM-элемент
+  const letter = letterElement.querySelector('[data-id]').textContent.toUpperCase();
+
+  // Обновляем колонку, фильтруем контакты по первой букве имени
+  const updatedContacts = getContacts().filter((contact) => contact.name[0].toUpperCase() === letter);
+  renderColumn(letter, updatedContacts);
 }
 
 // Функция удаления контакта из списка
@@ -60,27 +58,17 @@ function deleteContact(event) {
   const position = contactMessage.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
   const phone = contactMessage.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
-  // Удаляем из хранилища
-  const contactIndex = contactsStorage.findIndex((contact) =>
-    contact.name === name && contact.position === position && contact.phone === phone
-  );
-
-  if (contactIndex !== -1) {
-    contactsStorage.splice(contactIndex, 1); // Удаляем контакт
-  }
+  // Удаляем контакт
+  deleteContactToStorage(name, position, phone);
 
   // Удаляем из DOM
   contactMessage.remove();
 
   // Рендерим колонку заново
   const firstLetter = name[0].toUpperCase();
-  const updatedContacts = contactsStorage.filter((contact) => contact.name[0].toUpperCase() === firstLetter);
+  const updatedContacts = getContacts().filter((contact) => contact.name[0].toUpperCase() === firstLetter);
   renderColumn(firstLetter, updatedContacts);
-
-  // Обновляем localStorage
-  saveContactsToLocalStorage();
 }
-
 
 // Раскрывающееся меню с контактами при взаимодействии с буквой
 function openContactInfo(event) {
@@ -142,4 +130,4 @@ document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
   }
 });
 
-export { renderContactElement, addContactToStorage, deleteContact };
+export { renderContactElement, addContact, deleteContact, renderContacts };

@@ -1,5 +1,5 @@
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
-import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
+import { getContacts, updateContactInStorage } from './contact-manager.js';
 import { initPhoneInput } from './phone-mask.js';
 import { isEscapeKey } from './util.js';
 import { validateEmptyValues, validateLetterValues, validatePhoneValues, validateSameValues } from './validat.js';
@@ -63,7 +63,7 @@ function saveEditPopup() {
   }
 
   // Проверка идентичных значений
-  if (validateSameValues(contactsStorage, newName, newPosition, newPhone, errorMessage)) {
+  if (validateSameValues(getContacts(), newName, newPosition, newPhone, errorMessage)) {
     return;
   }
 
@@ -77,17 +77,12 @@ function saveEditPopup() {
     return;
   }
 
-  // Удаляем старый контакт из хранилища
-  const oldIndex = contactsStorage.findIndex((contact) =>
-    contact.name === oldName && contact.position === oldPosition && contact.phone === oldPhone
-  );
+  // Создаем объект старого контакта для сравнения и нового контакта
+  const oldContact = { name: oldName, position: oldPosition, phone: oldPhone };
+  const newContact = { name: newName, position: newPosition, phone: newPhone };
 
-  if (oldIndex !== -1) {
-    contactsStorage.splice(oldIndex, 1); // Удаляем старый контакт
-  }
-
-  // Добавляем обновленный контакт в хранилище
-  contactsStorage.push({ name: newName, position: newPosition, phone: newPhone });
+  // Обновляем контакт в хранилище
+  updateContactInStorage(oldContact, newContact);
 
   // Обновляем данные в DOM
   currentContactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent = newName;
@@ -115,9 +110,6 @@ function saveEditPopup() {
       }
     });
   }
-
-  // Сохраняем изменения в localStorage
-  saveContactsToLocalStorage();
 
   closeEditPopup();
 }
