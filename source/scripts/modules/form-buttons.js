@@ -1,4 +1,4 @@
-import { validateInputs, showErrorSameValue, isContactExist, checkedValue, checkedPhone } from './validat.js';
+import { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues } from './validat.js';
 import { addContactToStorage } from './contact.js';
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { updateCounter } from './counter.js';
@@ -20,23 +20,22 @@ function addContactToList() {
   const inputs = [nameInput, positionInput, phoneInput];
 
   // Проверка пустых значений
-  if (!validateInputs(inputs, errorMessage)) {
+  if (!validateEmptyValues(inputs, errorMessage)) {
     return;
   }
 
   // Проверка идентичных значений
-  if (isContactExist(contactsStorage, name, position, phone)) {
-    showErrorSameValue(errorMessage);
+  if (validateSameValues(contactsStorage, name, position, phone, errorMessage)) {
     return;
   }
 
   // Проверка имени и должности
-  if (!checkedValue(nameInput, errorMessage) || !checkedValue(positionInput, errorMessage)) {
+  if (!validateLetterValues(nameInput, errorMessage) || !validateLetterValues(positionInput, errorMessage)) {
     return;
   }
 
   // Проверка телефона
-  if (!checkedPhone(phoneInput, errorMessage)) {
+  if (!validatePhoneValues(phoneInput, errorMessage)) {
     return;
   }
 

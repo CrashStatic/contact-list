@@ -2,7 +2,7 @@ import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, MESSAGE_NAME_SELECTOR, MESS
 import { contactsStorage, saveContactsToLocalStorage } from './local-storage.js';
 import { initPhoneInput } from './phone-mask.js';
 import { isEscapeKey } from './util.js';
-import { validateInputs, checkedValue, checkedPhone, isContactExist, showErrorSameValue } from './validat.js';
+import { validateEmptyValues, validateLetterValues, validatePhoneValues, validateSameValues } from './validat.js';
 
 // Элементы попапа
 const editPopup = document.querySelector('#edit-popup');
@@ -58,23 +58,22 @@ function saveEditPopup() {
   initPhoneInput(popupPhoneInput);
 
   // Проверка пустых значений
-  if (!validateInputs(inputs, errorMessage)) {
+  if (!validateEmptyValues(inputs, errorMessage)) {
     return;
   }
 
   // Проверка идентичных значений
-  if (isContactExist(contactsStorage, newName, newPosition, newPhone)) {
-    showErrorSameValue(errorMessage);
+  if (validateSameValues(contactsStorage, newName, newPosition, newPhone, errorMessage)) {
     return;
   }
 
   // Проверка имени и должности
-  if (!checkedValue(popupNameInput, errorMessage) || !checkedValue(popupPositionInput, errorMessage)) {
+  if (!validateLetterValues(popupNameInput, errorMessage) || !validateLetterValues(popupPositionInput, errorMessage)) {
     return;
   }
 
   // Проверка телефона
-  if (!checkedPhone(popupPhoneInput, errorMessage)) {
+  if (!validatePhoneValues(popupPhoneInput, errorMessage)) {
     return;
   }
 
