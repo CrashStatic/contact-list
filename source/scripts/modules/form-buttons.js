@@ -1,11 +1,10 @@
 import { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues } from './validat.js';
-import { saveContacts } from './local-storage.js';
 import { updateCounter } from './counter.js';
 import { closeSearchModal, searchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
 import { isEscapeKey } from './util.js';
 import { addContact } from './contact.js';
-import { getContacts } from './contact-manager.js';
+import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
 
 const nameInput = document.getElementById('name');
 const positionInput = document.getElementById('position');
@@ -64,12 +63,7 @@ function clearAllContacts() {
     updateCounter(counterElement, contactsContainer);
   });
 
-  // Очищаем хранилище
-  const contactsStorage = getContacts();
-  contactsStorage.length = 0;
-
-  // Сохраняем обновленное состояние в localStorage
-  saveContacts(contactsStorage);
+  clearAllContactsInStorage();
 }
 
 // Функция открытия модального окна поиска

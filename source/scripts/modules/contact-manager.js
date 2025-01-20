@@ -54,9 +54,13 @@ function updateContactInStorage(oldContact, newContact) {
 }
 
 // Очистка всех контактов
-function clearAllContacts() {
-  contactsStorage = []; // Очищаем массив контактов
-  saveContacts(contactsStorage); // Обновляем localStorage
+function clearAllContactsInStorage() {
+  // Очищаем хранилище
+  const allContactsStorage = getContacts();
+  allContactsStorage.length = 0;
+
+  // Сохраняем обновленное состояние в localStorage
+  saveContacts(allContactsStorage);
 }
 
-export { getContacts, addContactToStorage, deleteContactToStorage, searchContacts, updateContactInStorage, clearAllContacts };
+export { getContacts, addContactToStorage, deleteContactToStorage, searchContacts, updateContactInStorage, clearAllContactsInStorage };
