@@ -2,7 +2,6 @@ import { validateEmptyValues, validateSameValues, validateLetterValues, validate
 import { updateCounter } from './counter.js';
 import { openSearchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
-// import { isEscapeKey } from './util.js';
 import { addContact } from './contact.js';
 import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
 
