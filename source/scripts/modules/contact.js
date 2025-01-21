@@ -119,7 +119,7 @@ document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
     }
 
     // Редактирования контакта по кнопке
-    if (evt.target.matches('.message__edit')) {
+    if (evt.target.matches('.js-edit-contact-button')) {
       const contactElement = evt.target.closest('.message');
       openEditPopup(contactElement);
       return;

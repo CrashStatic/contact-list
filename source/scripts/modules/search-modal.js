@@ -1,6 +1,6 @@
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { getContacts, searchContacts, updateContactInStorage } from './contact-manager.js';
-import { renderContactElement } from './contact.js';
+import { deleteContact, renderContactElement } from './contact.js';
 import { initPhoneInput } from './phone-mask.js';
 import { isEscapeKey } from './util.js';
 import { validateEmptyValues, validateLetterValues, validatePhoneValues, validateSameValues } from './validat.js';
@@ -13,9 +13,9 @@ const searchModalTemplate = document.querySelector('#search-modal-content');
 const editPopupTemplate = document.querySelector('#edit-popup-content');
 
 // Элементы попапа редактирования
-const popupNameInput = editPopupTemplate.content.querySelector('#popup-name');
-const popupPositionInput = editPopupTemplate.content.querySelector('#popup-position');
-const popupPhoneInput = editPopupTemplate.content.querySelector('#popup-phone');
+let popupNameInput;
+let popupPositionInput;
+let popupPhoneInput;
 
 let currentContactElement = null; // Контакт, который редактируется
 
@@ -34,22 +34,26 @@ function displaySearchResults(results, area) {
   });
 }
 
+// Обработчик для ввода поиска
+function listenSearchInput(element, area) {
+  element.addEventListener('input', () => {
+    const query = element.value.trim().toLowerCase();
+    if (query) {
+      const results = searchContacts(query); // Ищем контакты по запросу
+      displaySearchResults(results, area); // Отображаем результаты
+    } else {
+      area.innerHTML = ''; // Очищаем, если строка поиска пуста
+    }
+  });
+}
+
 // Функция открытия модального окна поиска
 function openSearchModal() {
   openModal(searchModalTemplate);
   const searchInput = modal.querySelector('.modal__input');
   const searchArea = modal.querySelector('.modal__search-area');
 
-  // Обработчик для ввода поиска
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim().toLowerCase();
-    if (query) {
-      const results = searchContacts(query); // Ищем контакты по запросу
-      displaySearchResults(results, searchArea); // Отображаем результаты
-    } else {
-      searchArea.innerHTML = ''; // Очищаем, если строка поиска пуста
-    }
-  });
+  listenSearchInput(searchInput, searchArea);
 
   modal.querySelector('.modal__button-show').addEventListener('click', showAllContacts);
 }
@@ -66,8 +70,15 @@ function openModal(template) {
   const content = template.content.cloneNode(true);
   modalBody.appendChild(content);
 
+  // Теперь добавляем обработчики
+  popupNameInput = modal.querySelector('#popup-name');
+  popupPositionInput = modal.querySelector('#popup-position');
+  popupPhoneInput = modal.querySelector('#popup-phone');
+
   // Слушаем закрытие модалки
   modal.addEventListener('click', closeModalHandler);
+
+  modal.querySelector('input').focus();
 
   document.addEventListener('keydown', onDocumentKeydown);
 }
@@ -86,23 +97,17 @@ function openEditPopup(contactElement) {
   editTitle.textContent = 'Edit contact';
   currentContactElement = contactElement;
 
+  openModal(editPopupTemplate);
+
   // Заполняем поля попапа текущими данными контакта
   popupNameInput.value = contactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent;
   popupPositionInput.value = contactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
   popupPhoneInput.value = contactElement.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
-  openModal(editPopupTemplate);
-
-  // Удаляем старый обработчик
-  const saveButton = modal.querySelector('.form__button--popup-save');
-  saveButton.removeEventListener('click', saveEditPopup);
-
-  // Добавляем новый обработчик
-  saveButton.addEventListener('click', saveEditPopup);
-
   modal.querySelector('input').focus(); // Перемещаем фокус на первое поле ввода
   document.addEventListener('keydown', onDocumentKeydown);
 }
+
 
 // Закрытие модалки
 function closeModal() {
@@ -112,6 +117,17 @@ function closeModal() {
 
   // Удаляем обработчик на закрытие, чтобы избежать утечек памяти
   modal.removeEventListener('click', closeModalHandler);
+
+  // Возвращаем фокус на редактируемый контакт - на кнопку редактирования
+
+  if (currentContactElement) {
+    const editButton = currentContactElement.querySelector('.js-edit-contact-button');
+    if (editButton) {
+      editButton.focus(); // Устанавливаем фокус на кнопку редактирования
+    }
+  }
+
+  currentContactElement = null;
 }
 
 function saveEditPopup() {
@@ -156,7 +172,6 @@ function saveEditPopup() {
   // Обновляем контакт в хранилище
   updateContactInStorage(oldContact, newContact);
 
-
   // Обновляем данные в DOM
   currentContactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent = newName;
   currentContactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent = newPosition;
@@ -198,6 +213,12 @@ document.querySelector('.modal').addEventListener('click', (e) => {
   // Сохранение изменений
   if (e.target.matches('.form__button--popup-save')) {
     saveEditPopup();
+  }
+
+  // Удаление контакта по кнопке
+  if (e.target.closest('.js-delete-contact-button')) {
+    deleteContact(e);
+    return;
   }
 
   // Редактирования контакта по кнопке
