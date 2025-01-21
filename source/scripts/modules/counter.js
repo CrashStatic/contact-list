@@ -1,6 +1,5 @@
-// Функция для обновления счётчика
 function updateCounter(counterElement, contactsContainer) {
-  const count = contactsContainer.children.length; // Количество контактов
+  const count = contactsContainer.children.length;
 
   const element = contactsContainer.parentElement;
 

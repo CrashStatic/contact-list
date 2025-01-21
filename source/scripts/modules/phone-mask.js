@@ -1,4 +1,3 @@
-// Маска телефона
 const initPhoneInput = (phone) => {
   let oldValue = '';
 
@@ -13,10 +12,9 @@ const initPhoneInput = (phone) => {
 
     // Добавляем префикс только если это первый ввод
     if (value.length === 1 && value[0] !== '7') {
-      value = `7${ value}`; // Добавляем '7', если это первый ввод
+      value = `7${ value}`;
     }
 
-    // Форматируем номер
     let formattedValue = '+7 ';
 
     if (value.length > 1) {
@@ -32,8 +30,8 @@ const initPhoneInput = (phone) => {
       formattedValue += ` ${value.substring(9, 11)}`;
     }
 
-    phone.value = formattedValue; // Обновляем поле ввода
-    oldValue = value; // Обновляем старое значение
+    phone.value = formattedValue;
+    oldValue = value;
   });
 };
 

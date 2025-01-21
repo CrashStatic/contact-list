@@ -9,7 +9,6 @@ import { COLUMN_ELEMENT_SELECTOR } from './modules/constants.js';
 import { addContact } from './modules/contact.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Заполняем столбцы буквами
   const containerLeft = document.querySelector('.column-left');
   const containerRight = document.querySelector('.column-right');
 
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   createColumn(ALPHABET_N_Z, containerRight);
 
   // Используем getContacts, чтобы получить актуальные данные
-  const contacts = getContacts(); // Получаем все контакты из менеджера
+  const contacts = getContacts();
 
   contacts.forEach(({ name, position, phone }) => {
     const firstLetter = name[0].toUpperCase();
@@ -28,6 +27,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Работа с телефоном
   initPhoneInput(phoneInput);
 });

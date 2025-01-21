@@ -1,25 +1,22 @@
 const MINIMUM_LENGTH = 3;
 
-const errorClass = 'input--error'; // CSS-класс для выделения ошибок
+const errorClass = 'input--error';
 
-// Функция для сброса ошибок
 function resetErrors(input, errorMessage) {
   input.addEventListener('input', () => {
-    input.classList.remove(errorClass); // Убираем класс ошибки
+    input.classList.remove(errorClass);
 
-    // Удаляем сообщение об ошибке, если оно есть
     errorMessage.textContent = '';
   });
 }
 
 function showError(input, errorMessage, textErrorMessage) {
-  resetErrors(input, errorMessage); // Сначала сбрасываем предыдущие ошибки
+  resetErrors(input, errorMessage);
 
   input.classList.add(errorClass);
   errorMessage.textContent = textErrorMessage;
 }
 
-// Валидация на пустые значения
 function validateEmptyValues(inputs, errorMessage) {
   let isValid = true;
 
@@ -33,7 +30,6 @@ function validateEmptyValues(inputs, errorMessage) {
   return isValid;
 }
 
-// Валидация для пустых полей
 function validateInputEmpty(input, errorMessage) {
   if (!input.value.trim()) {
     showError(input, errorMessage, 'Fill in all fields!');
@@ -50,7 +46,6 @@ function validateSameValues(storage, name, position, phone, errorMessage) {
   );
 
   if (existingContact) {
-    // Если контакт найден, показываем одну общую ошибку
     errorMessage.textContent = 'This contact has already been recorded!';
     return true;
   }
@@ -58,18 +53,15 @@ function validateSameValues(storage, name, position, phone, errorMessage) {
   return false;
 }
 
-// Функция валидации имени и должности
 function validateLetterValues(name, errorMessage) {
-  resetErrors(name, errorMessage); // Сначала сбрасываем предыдущие ошибки
+  resetErrors(name, errorMessage);
   const regLetters = /[a-zA-Z ]/gmi;
 
-  // Проверяем длину введенного значения
   if (name.value.length <= MINIMUM_LENGTH) {
     showError(name, errorMessage, `Value cannot be shorter than ${MINIMUM_LENGTH} letters!`);
     return false;
   }
 
-  // Проверяем формат введенного значения
   if (!regLetters.test(name.value)) {
     showError(name, errorMessage, 'Value must contain English letters!');
     return false;
@@ -78,9 +70,8 @@ function validateLetterValues(name, errorMessage) {
   return true;
 }
 
-// Функция валидации телефона
 function validatePhoneValues(phone, errorMessage) {
-  resetErrors(phone, errorMessage); // Сначала сбрасываем предыдущие ошибки
+  resetErrors(phone, errorMessage);
   const regNumbers = /^\+7 \d{3} \d{3} \d{2} \d{2}$/;
 
   if (!regNumbers.test(phone.value)) {
