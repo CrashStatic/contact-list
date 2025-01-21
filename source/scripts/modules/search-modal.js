@@ -108,7 +108,6 @@ function openEditPopup(contactElement) {
   document.addEventListener('keydown', onDocumentKeydown);
 }
 
-
 // Закрытие модалки
 function closeModal() {
   modal.classList.remove('modal--open');
@@ -119,7 +118,6 @@ function closeModal() {
   modal.removeEventListener('click', closeModalHandler);
 
   // Возвращаем фокус на редактируемый контакт - на кнопку редактирования
-
   if (currentContactElement) {
     const editButton = currentContactElement.querySelector('.js-edit-contact-button');
     if (editButton) {
