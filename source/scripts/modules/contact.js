@@ -70,6 +70,29 @@ function deleteContact(event) {
   renderColumn(firstLetter, updatedContacts);
 }
 
+// Функция обновления контакта
+function updateContact(oldContact, newContact) {
+  const firstLetter = oldContact.name[0].toUpperCase();
+  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
+
+  if (letterElement) {
+    const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
+    const contactElements = contactsContainer.querySelectorAll('.element__message');
+
+    contactElements.forEach((contact) => {
+      const contactName = contact.querySelector(MESSAGE_NAME_SELECTOR).textContent;
+      const contactPosition = contact.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
+      const contactPhone = contact.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
+
+      if (contactName === oldContact.name && contactPosition === oldContact.position && contactPhone === oldContact.phone) {
+        contact.querySelector(MESSAGE_NAME_SELECTOR).textContent = newContact.name;
+        contact.querySelector(MESSAGE_POSITION_SELECTOR).textContent = newContact.position;
+        contact.querySelector(MESSAGE_PHONE_SELECTOR).textContent = newContact.phone;
+      }
+    });
+  }
+}
+
 // Раскрывающееся меню с контактами при взаимодействии с буквой
 function openContactInfo(event) {
   if (event.target.closest(COLUMN_ELEMENT_SELECTOR)) {
@@ -130,4 +153,4 @@ document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
   }
 });
 
-export { renderContactElement, addContact, deleteContact, renderContacts };
+export { renderContactElement, addContact, deleteContact, renderContacts, updateContact };

@@ -1,6 +1,6 @@
-import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
+import { MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { getContacts, searchContacts, updateContactInStorage } from './contact-manager.js';
-import { deleteContact, renderContactElement } from './contact.js';
+import { deleteContact, renderContactElement, updateContact } from './contact.js';
 import { initPhoneInput } from './phone-mask.js';
 import { isEscapeKey } from './util.js';
 import { validateEmptyValues, validateLetterValues, validatePhoneValues, validateSameValues } from './validat.js';
@@ -74,9 +74,6 @@ function openModal(template) {
   popupNameInput = modal.querySelector('#popup-name');
   popupPositionInput = modal.querySelector('#popup-position');
   popupPhoneInput = modal.querySelector('#popup-phone');
-
-  // Слушаем закрытие модалки
-  modal.addEventListener('click', closeModalHandler);
 
   modal.querySelector('input').focus();
 
@@ -176,26 +173,7 @@ function saveEditPopup() {
   currentContactElement.querySelector(MESSAGE_PHONE_SELECTOR).textContent = newPhone;
 
   // Обновляем данные в основном списке через взаимодействие в попапе
-  const firstLetter = oldName[0].toUpperCase();
-  const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR);
-
-  if (letterElement) {
-    const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
-    const contactElements = contactsContainer.querySelectorAll('.element__message');
-
-    contactElements.forEach((contact) => {
-      const contactName = contact.querySelector(MESSAGE_NAME_SELECTOR).textContent;
-      const contactPosition = contact.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
-      const contactPhone = contact.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
-
-      // Обновляем только нужный контакт
-      if (contactName === oldName && contactPosition === oldPosition && contactPhone === oldPhone) {
-        contact.querySelector(MESSAGE_NAME_SELECTOR).textContent = newName;
-        contact.querySelector(MESSAGE_POSITION_SELECTOR).textContent = newPosition;
-        contact.querySelector(MESSAGE_PHONE_SELECTOR).textContent = newPhone;
-      }
-    });
-  }
+  updateContact(oldContact, newContact);
 
   closeModal();
 }
