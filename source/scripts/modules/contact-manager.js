@@ -44,10 +44,9 @@ function updateContactInStorage(oldContact, newContact) {
 }
 
 function clearAllContactsInStorage() {
-  const allContactsStorage = getContacts();
-  allContactsStorage.length = 0;
+  contactsStorage = [];
 
-  saveContacts(LOCAL_STORAGE_KEY, allContactsStorage);
+  saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
 export { getContacts, addContactToStorage, deleteContactToStorage, searchContacts, updateContactInStorage, clearAllContactsInStorage };
