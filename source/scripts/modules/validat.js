@@ -2,84 +2,66 @@ const MINIMUM_LENGTH = 3;
 
 const errorClass = 'input--error';
 
-function resetErrors(input, errorMessage) {
-  input.addEventListener('input', () => {
+function resetErrors(inputs, errorMessage) {
+  inputs.forEach((input) => {
     input.classList.remove(errorClass);
-
-    errorMessage.textContent = '';
   });
+  errorMessage.textContent = '';
 }
 
 function showError(input, errorMessage, textErrorMessage) {
-  resetErrors(input, errorMessage);
-
   input.classList.add(errorClass);
   errorMessage.textContent = textErrorMessage;
 }
 
-function validateEmptyValues(inputs, errorMessage) {
-  let isValid = true;
+function validateForm(inputs, storage, errorMessage) {
+  const errors = [];
 
+  // Сброс ошибок перед новой проверкой
+  resetErrors(inputs, errorMessage);
+
+  // Проверка на пустые значения
   inputs.forEach((input) => {
-    const error = validateInputEmpty(input, errorMessage); // Валидация с отображением ошибки
-    if (error) {
-      isValid = false;
+    if (!input.value.trim()) {
+      errors.push({ input, message: 'Fill in all fields!' });
     }
   });
 
-  return isValid;
-}
-
-function validateInputEmpty(input, errorMessage) {
-  if (!input.value.trim()) {
-    showError(input, errorMessage, 'Fill in all fields!');
-    return true;
-  }
-  return false;
-}
-
-function validateSameValues(storage, name, position, phone, errorMessage) {
+  // Проверка на существующие контакты
+  const [name, position, phone] = inputs;
   const existingContact = storage.some((contact) =>
-    contact.name.toLowerCase() === name.toLowerCase() &&
-    contact.position.toLowerCase() === position.toLowerCase() &&
-    contact.phone === phone
+    contact.name.toLowerCase() === name.value.toLowerCase() &&
+    contact.position.toLowerCase() === position.value.toLowerCase() &&
+    contact.phone === phone.value
   );
 
   if (existingContact) {
-    errorMessage.textContent = 'This contact has already been recorded!';
-    return true;
+    errors.push({ input: null, message: 'This contact has already been recorded!' });
   }
 
-  return false;
-}
-
-function validateLetterValues(name, errorMessage) {
-  resetErrors(name, errorMessage);
+  // Проверка на допустимые символы в имени и должности
   const regLetters = /[a-zA-Z ]/gmi;
-
   if (name.value.length <= MINIMUM_LENGTH) {
-    showError(name, errorMessage, `Value cannot be shorter than ${MINIMUM_LENGTH} letters!`);
-    return false;
+    errors.push({ input: name, message: `Value cannot be shorter than ${MINIMUM_LENGTH} letters!` });
   }
-
   if (!regLetters.test(name.value)) {
-    showError(name, errorMessage, 'Value must contain English letters!');
-    return false;
+    errors.push({ input: name, message: 'Value must contain English letters!' });
+  }
+  if (position.value.length <= MINIMUM_LENGTH) {
+    errors.push({ input: position, message: `Value cannot be shorter than ${MINIMUM_LENGTH} letters!` });
+  }
+  if (!regLetters.test(position.value)) {
+    errors.push({ input: position, message: 'Value must contain English letters!' });
   }
 
-  return true;
-}
-
-function validatePhoneValues(phone, errorMessage) {
-  resetErrors(phone, errorMessage);
+  // Проверка на номер телефона
   const regNumbers = /^\+7 \d{3} \d{3} \d{2} \d{2}$/;
-
   if (!regNumbers.test(phone.value)) {
-    showError(phone, errorMessage, 'Wrong number!');
-    return false;
+    errors.push({ input: phone, message: 'Wrong number!' });
   }
 
-  return true;
+  // Возвращаем результат валидации
+  return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
 
-export { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues };
+export { showError, validateForm };

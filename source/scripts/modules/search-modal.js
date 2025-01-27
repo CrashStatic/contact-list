@@ -3,7 +3,7 @@ import { getContacts, searchContacts, updateContactInStorage } from './contact-m
 import { deleteContact, renderContactElement, updateContact } from './contact.js';
 import { initPhoneInput } from './phone-mask.js';
 import { isEscapeKey } from './util.js';
-import { validateEmptyValues, validateLetterValues, validatePhoneValues, validateSameValues } from './validat.js';
+import { showError, validateForm } from './validat.js';
 
 const modal = document.querySelector('.modal');
 const searchModalTemplate = document.querySelector('#search-modal-content');
@@ -123,19 +123,18 @@ function saveEditPopup() {
 
   initPhoneInput(popupPhoneInput);
 
-  if (!validateEmptyValues(inputs, errorMessage)) {
-    return;
-  }
+  // Валидация
+  const { ok, errors } = validateForm(inputs, getContacts(), errorMessage);
 
-  if (validateSameValues(getContacts(), newName, newPosition, newPhone, errorMessage)) {
-    return;
-  }
-
-  if (!validateLetterValues(popupNameInput, errorMessage) || !validateLetterValues(popupPositionInput, errorMessage)) {
-    return;
-  }
-
-  if (!validatePhoneValues(popupPhoneInput, errorMessage)) {
+  if (!ok) {
+    // Если есть ошибки, отображаем их
+    errors.forEach(({ input, message }) => {
+      if (input) {
+        showError(input, errorMessage, message);
+      } else {
+        errorMessage.textContent = message;
+      }
+    });
     return;
   }
 

@@ -1,4 +1,4 @@
-import { validateEmptyValues, validateSameValues, validateLetterValues, validatePhoneValues } from './validat.js';
+import { validateForm, showError } from './validat.js';
 import { updateCounter } from './counter.js';
 import { openSearchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
@@ -17,19 +17,18 @@ function addContactToList() {
   const errorMessage = document.querySelector('.form__error');
   const inputs = [nameInput, positionInput, phoneInput];
 
-  if (!validateEmptyValues(inputs, errorMessage)) {
-    return;
-  }
+  // Валидация
+  const { ok, errors } = validateForm(inputs, getContacts(), errorMessage);
 
-  if (validateSameValues(getContacts(), name, position, phone, errorMessage)) {
-    return;
-  }
-
-  if (!validateLetterValues(nameInput, errorMessage) || !validateLetterValues(positionInput, errorMessage)) {
-    return;
-  }
-
-  if (!validatePhoneValues(phoneInput, errorMessage)) {
+  if (!ok) {
+    // Если есть ошибки, отображаем их
+    errors.forEach(({ input, message }) => {
+      if (input) {
+        showError(input, errorMessage, message);
+      } else {
+        errorMessage.textContent = message;
+      }
+    });
     return;
   }
 
