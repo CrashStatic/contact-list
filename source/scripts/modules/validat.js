@@ -14,54 +14,86 @@ function showError(input, errorMessage, textErrorMessage) {
   errorMessage.textContent = textErrorMessage;
 }
 
-function validateForm(inputs, storage, errorMessage) {
+function validateEmptyFields(inputs) {
   const errors = [];
-
-  // Сброс ошибок перед новой проверкой
-  resetErrors(inputs, errorMessage);
-
-  // Проверка на пустые значения
   inputs.forEach((input) => {
     if (!input.value.trim()) {
       errors.push({ input, message: 'Fill in all fields!' });
     }
   });
 
-  // Проверка на существующие контакты
-  const [name, position, phone] = inputs;
+  return errors;
+}
+
+function validateContactUniqueness(storage, name, position, phone) {
   const existingContact = storage.some((contact) =>
-    contact.name.toLowerCase() === name.value.toLowerCase() &&
-    contact.position.toLowerCase() === position.value.toLowerCase() &&
-    contact.phone === phone.value
+    contact.name.toLowerCase() === name.toLowerCase() &&
+    contact.position.toLowerCase() === position.toLowerCase() &&
+    contact.phone === phone
   );
 
-  if (existingContact) {
-    errors.push({ input: null, message: 'This contact has already been recorded!' });
-  }
+  return existingContact
+    ? [{ input: null, message: 'This contact has already been recorded!' }]
+    : [];
+}
 
-  // Проверка на допустимые символы в имени и должности
-  const regLetters = /[a-zA-Z ]/gmi;
-  if (name.value.length <= MINIMUM_LENGTH) {
-    errors.push({ input: name, message: `Value cannot be shorter than ${MINIMUM_LENGTH} letters!` });
-  }
-  if (!regLetters.test(name.value)) {
-    errors.push({ input: name, message: 'Value must contain English letters!' });
-  }
-  if (position.value.length <= MINIMUM_LENGTH) {
-    errors.push({ input: position, message: `Value cannot be shorter than ${MINIMUM_LENGTH} letters!` });
-  }
-  if (!regLetters.test(position.value)) {
-    errors.push({ input: position, message: 'Value must contain English letters!' });
-  }
+function validateLetters(input, minLength) {
+  const errors = [];
+  const regLetters = /^[a-zA-Z]+$/;
 
-  // Проверка на номер телефона
+  if (input.value.length < minLength) {
+    errors.push({ input, message: `Value cannot be shorter than ${minLength} letters!` });
+  }
+  if (!regLetters.test(input.value)) {
+    errors.push({ input, message: 'Value must contain English letters!' });
+  }
+  return errors;
+}
+
+function validatePhone(phone) {
   const regNumbers = /^\+7 \d{3} \d{3} \d{2} \d{2}$/;
-  if (!regNumbers.test(phone.value)) {
-    errors.push({ input: phone, message: 'Wrong number!' });
+  return !regNumbers.test(phone.value)
+    ? [{ input: phone, message: 'Wrong number!' }]
+    : [];
+}
+
+function validateForm(inputs, storage, errorMessage) {
+  const [name, position, phone] = inputs;
+
+  // Сброс ошибок перед новой проверкой
+  resetErrors(inputs, errorMessage);
+
+  // 1. Проверка на пустые поля
+  const emptyFieldsErrors = validateEmptyFields(inputs);
+  if (emptyFieldsErrors.length > 0) {
+    return { ok: false, errors: emptyFieldsErrors };
   }
 
-  // Возвращаем результат валидации
-  return errors.length === 0 ? { ok: true } : { ok: false, errors };
+  // 2. Проверка на уникальность контакта
+  const uniquenessErrors = validateContactUniqueness(storage, name.value, position.value, phone.value);
+  if (uniquenessErrors.length > 0) {
+    return { ok: false, errors: uniquenessErrors };
+  }
+
+  // 3. Проверка имени и должности на допустимые символы и длину
+  const nameErrors = validateLetters(name, MINIMUM_LENGTH);
+  if (nameErrors.length > 0) {
+    return { ok: false, errors: nameErrors };
+  }
+
+  const positionErrors = validateLetters(position, MINIMUM_LENGTH);
+  if (positionErrors.length > 0) {
+    return { ok: false, errors: positionErrors };
+  }
+
+  // 4. Проверка номера телефона
+  const phoneErrors = validatePhone(phone);
+  if (phoneErrors.length > 0) {
+    return { ok: false, errors: phoneErrors };
+  }
+
+  // Если все проверки пройдены
+  return { ok: true, errors: [] };
 }
 
 export { showError, validateForm };
