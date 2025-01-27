@@ -1,23 +1,20 @@
-const LOCAL_STORAGE_KEY = 'contacts';
-
 // Загрузка контактов из localStorage
-function loadContacts() {
-  const savedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
+function loadContacts(key) {
+  const savedContacts = localStorage.getItem(key);
   if (savedContacts) {
     try {
       return JSON.parse(savedContacts);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Ошибка парсинга данных из localStorage:', error);
-      return [];
+      return error;
     }
   }
-  return [];
 }
 
 // Сохранение контактов в localStorage
-function saveContacts(contacts) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
+function saveContacts(key, contacts) {
+  localStorage.setItem(key, JSON.stringify(contacts));
 }
 
 export { loadContacts, saveContacts };

@@ -1,7 +1,8 @@
 import { loadContacts, saveContacts } from './local-storage.js';
+const LOCAL_STORAGE_KEY = 'contacts';
 
 // Инициализируем контакты из localStorage
-let contactsStorage = loadContacts() || [];
+let contactsStorage = loadContacts(LOCAL_STORAGE_KEY) || [];
 
 // Получаем все контакты (геттер)
 function getContacts() {
@@ -12,7 +13,7 @@ function addContactToStorage(name, position, phone) {
   const newContact = { name, position, phone };
   contactsStorage.push(newContact);
 
-  saveContacts(contactsStorage);
+  saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
 function deleteContactToStorage(name, position, phone) {
@@ -20,7 +21,7 @@ function deleteContactToStorage(name, position, phone) {
     (contact) => contact.name !== name || contact.position !== position || contact.phone !== phone
   );
 
-  saveContacts(contactsStorage);
+  saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
 function searchContacts(query) {
@@ -43,14 +44,14 @@ function updateContactInStorage(oldContact, newContact) {
 
   contactsStorage.push(newContact);
 
-  saveContacts(contactsStorage);
+  saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
 function clearAllContactsInStorage() {
   const allContactsStorage = getContacts();
   allContactsStorage.length = 0;
 
-  saveContacts(allContactsStorage);
+  saveContacts(LOCAL_STORAGE_KEY, allContactsStorage);
 }
 
 export { getContacts, addContactToStorage, deleteContactToStorage, searchContacts, updateContactInStorage, clearAllContactsInStorage };
