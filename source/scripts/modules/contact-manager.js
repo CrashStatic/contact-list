@@ -34,15 +34,11 @@ function searchContacts(query) {
 }
 
 function updateContactInStorage(oldContact, newContact) {
-  const oldIndex = contactsStorage.findIndex((contact) =>
+  contactsStorage = contactsStorage.map((contact) =>
     contact.name === oldContact.name && contact.position === oldContact.position && contact.phone === oldContact.phone
+      ? newContact
+      : contact
   );
-
-  if (oldIndex !== -1) {
-    contactsStorage.splice(oldIndex, 1); // Удаляем старый контакт
-  }
-
-  contactsStorage.push(newContact);
 
   saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
