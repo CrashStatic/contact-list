@@ -1,7 +1,8 @@
 import { Counter } from './counter.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager.js';
-import { openEditPopup } from './search-modal.js';
+import { openEditPopup } from './edit-form.js';
+// import { openEditPopup } from './search-modal.js';
 
 const counters = {}; // Хранилище для счетчиков
 

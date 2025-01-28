@@ -1,5 +1,4 @@
 import './modules/form-buttons.js';
-import './modules/search-modal.js';
 import { createColumn } from './modules/column.js';
 import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock.js';
 import { phoneInput } from './modules/form-buttons.js';

@@ -1,9 +1,10 @@
 import { validateForm, showError } from './validat.js';
 import { Counter } from './counter.js';
-import { openSearchModal } from './search-modal.js';
+// import { openSearchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
 import { addContact } from './contact.js';
 import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
+import { openSearchModal } from './search.js';
 
 const nameInput = document.getElementById('name');
 const positionInput = document.getElementById('position');
