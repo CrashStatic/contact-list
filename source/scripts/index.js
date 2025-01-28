@@ -5,7 +5,10 @@ import { phoneInput } from './modules/form-buttons.js';
 import { initPhoneInput } from './modules/phone-mask.js';
 import { getContacts } from './modules/contact-manager.js';
 import { COLUMN_ELEMENT_SELECTOR } from './modules/constants.js';
-import { addContact } from './modules/contact.js';
+import { addContact, deleteContact } from './modules/contact.js';
+import { showAllContacts } from './modules/search.js';
+import { openEditPopup, saveEditPopup } from './modules/edit-form.js';
+import { closeModal } from './modules/modal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const containerLeft = document.querySelector('.column-left');
@@ -27,4 +30,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   initPhoneInput(phoneInput);
+
+  // Обработка кликов внутри модального окна
+  document.querySelector('.modal').addEventListener('click', (e) => {
+    if (e.target.matches('.modal__button-show')) {
+      showAllContacts();
+    }
+
+    if (e.target.matches('.form__button--popup-save')) {
+      saveEditPopup();
+    }
+
+    if (e.target.closest('.js-delete-contact-button')) {
+      deleteContact(e);
+      return;
+    }
+
+    if (e.target.closest('.js-edit-contact-button')) {
+      const contactElement = e.target.closest('.message');
+      openEditPopup(contactElement);
+      return;
+    }
+
+    if (e.target.closest('.modal__close-button') || e.target.matches('.modal__overlay')) {
+      closeModal();
+    }
+  });
 });

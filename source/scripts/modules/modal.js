@@ -1,6 +1,3 @@
-import { deleteContact } from './contact';
-import { openEditPopup, saveEditPopup } from './edit-form';
-import { showAllContacts } from './search';
 import { isEscapeKey } from './util';
 
 const modal = document.querySelector('.modal');
@@ -32,33 +29,5 @@ function onDocumentKeydown (evt) {
     closeModal();
   }
 }
-document.querySelector('.modal').addEventListener('click', (e) => {
-  if (e.target.matches('.modal__button-show')) {
-    showAllContacts();
-  }
-
-  if (e.target.matches('.form__button--popup-save')) {
-    saveEditPopup();
-  }
-
-  if (e.target.closest('.js-delete-contact-button')) {
-    deleteContact(e);
-    return;
-  }
-
-  if (e.target.closest('.js-edit-contact-button')) {
-    const contactElement = e.target.closest('.message');
-    openEditPopup(contactElement);
-    return;
-  }
-
-  if (e.target.closest('.modal__close-button')) {
-    closeModal();
-  }
-
-  if (e.target.matches('.modal__overlay')) {
-    closeModal();
-  }
-});
 
 export { modal, openModal, closeModal, onDocumentKeydown };
