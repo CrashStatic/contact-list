@@ -55,12 +55,12 @@ function clearAllContacts() {
   clearAllContactsInStorage();
 }
 
-document.querySelector('.form__buttons').addEventListener('click', (e) => {
-  if (e.target.matches('.js-add-contact-button')) {
-    e.preventDefault();
-    addContactToList();
-  }
+document.querySelector('.form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  addContactToList();
+});
 
+document.querySelector('.form__buttons').addEventListener('click', (e) => {
   if (e.target.matches('.js-clear-contact-button')) {
     clearAllContacts();
   }
