@@ -1,16 +1,17 @@
 .modal {
   width: 100%;
-  display: none;
+  display: flex;
   position: fixed;
   min-height: 100%;
   background: none;
   padding: 0;
   border: none;
   inset: 0;
+  visibility: hidden;
 }
 
-.modal--open {
-  display: flex;
+.modal[open] {
+  visibility: visible;
 }
 
 .modal__overlay {

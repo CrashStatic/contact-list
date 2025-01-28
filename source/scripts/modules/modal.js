@@ -3,7 +3,7 @@ import { isEscapeKey } from './util';
 const modal = document.querySelector('.modal');
 
 function openModal(template) {
-  modal.classList.add('modal--open');
+  modal.showModal();
   document.querySelector('.body').style.overflow = 'hidden';
 
   const modalBody = modal.querySelector('.modal__body');
@@ -18,7 +18,7 @@ function openModal(template) {
 }
 
 function closeModal() {
-  modal.classList.remove('modal--open');
+  modal.close();
   document.querySelector('.body').style.overflow = 'auto';
   document.removeEventListener('keydown', onDocumentKeydown);
 }
