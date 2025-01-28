@@ -24,18 +24,6 @@ function closeModal() {
   modal.classList.remove('modal--open');
   document.querySelector('.body').style.overflow = 'auto';
   document.removeEventListener('keydown', onDocumentKeydown);
-
-  // modal.removeEventListener('click', closeModalHandler);
-
-  // // Возвращаем фокус на редактируемый контакт - на кнопку редактирования
-  // if (currentContactElement) {
-  //   const editButton = currentContactElement.querySelector('.js-edit-contact-button');
-  //   if (editButton) {
-  //     editButton.focus();
-  //   }
-  // }
-
-  // currentContactElement = null;
 }
 
 function onDocumentKeydown (evt) {
