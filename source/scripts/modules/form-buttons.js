@@ -1,5 +1,5 @@
 import { validateForm, showError } from './validat.js';
-import { updateCounter } from './counter.js';
+import { Counter } from './counter.js';
 import { openSearchModal } from './search-modal.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
 import { addContact } from './contact.js';
@@ -49,7 +49,8 @@ function clearAllContacts() {
     contactsContainer.innerHTML = '';
 
     const counterElement = letterElement.querySelector(COUNTER_SELECTOR);
-    updateCounter(counterElement, contactsContainer);
+    const counter = new Counter(counterElement, contactsContainer);
+    counter.reset();
   });
 
   clearAllContactsInStorage();

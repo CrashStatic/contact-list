@@ -1,7 +1,9 @@
-import { updateCounter } from './counter.js';
+import { Counter } from './counter.js';
 import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
 import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager.js';
 import { openEditPopup } from './search-modal.js';
+
+const counters = {}; // Хранилище для счетчиков
 
 function renderContactElement(name, position, phone) {
   const letterTemplate = document.querySelector('#message').content.querySelector('.message');
@@ -28,7 +30,15 @@ function renderColumn(letter, contacts) {
     renderContacts(contacts, contactsContainer);
 
     const counterElement = columnElement.querySelector(COUNTER_SELECTOR);
-    updateCounter(counterElement, contactsContainer);
+
+    // Если счетчик для этой буквы еще не создан, создаем его
+    if (!counters[letter]) {
+      counters[letter] = new Counter(counterElement, contactsContainer);
+    }
+
+    // Обновляем счетчик на основе текущего количества контактов
+    counters[letter].count = contacts.length;
+    counters[letter].update();
   }
 }
 
