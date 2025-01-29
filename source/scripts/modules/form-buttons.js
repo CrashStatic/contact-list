@@ -1,21 +1,20 @@
 import { validateForm, showError } from './validat.js';
 import { Counter } from './counter.js';
-// import { openSearchModal } from './search-modal.js';
-import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR } from './constants.js';
+import { COLUMN_ELEMENT_SELECTOR, CONTACT_CLEAR_BTN, CONTACT_SEARCH_BTN, CONTACTS_SELECTOR, COUNTER_SELECTOR, FORM_BTNS, FORM_ERROR, FORM_NAME_ID, FORM_PHONE_ID, FORM_POSITION_ID, FORM_SELECTOR } from './constants.js';
 import { addContact } from './contact.js';
 import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
 import { openSearchModal } from './search.js';
 
-const nameInput = document.getElementById('name');
-const positionInput = document.getElementById('position');
-const phoneInput = document.getElementById('phone');
+const nameInput = document.getElementById(FORM_NAME_ID);
+const positionInput = document.getElementById(FORM_POSITION_ID);
+const phoneInput = document.getElementById(FORM_PHONE_ID);
 
 function addContactToList() {
   const name = nameInput.value.trim();
   const position = positionInput.value.trim();
   const phone = phoneInput.value.trim();
 
-  const errorMessage = document.querySelector('.form__error');
+  const errorMessage = document.querySelector(FORM_ERROR);
   const inputs = [nameInput, positionInput, phoneInput];
 
   // Валидация
@@ -57,17 +56,17 @@ function clearAllContacts() {
   clearAllContactsInStorage();
 }
 
-document.querySelector('.form').addEventListener('submit', (e) => {
+document.querySelector(FORM_SELECTOR).addEventListener('submit', (e) => {
   e.preventDefault();
   addContactToList();
 });
 
-document.querySelector('.form__buttons').addEventListener('click', (e) => {
-  if (e.target.matches('.js-clear-contact-button')) {
+document.querySelector(FORM_BTNS).addEventListener('click', (e) => {
+  if (e.target.matches(CONTACT_CLEAR_BTN)) {
     clearAllContacts();
   }
 
-  if (e.target.matches('.js-search-contact-button')) {
+  if (e.target.matches(CONTACT_SEARCH_BTN)) {
     openSearchModal();
   }
 

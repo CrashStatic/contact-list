@@ -1,13 +1,12 @@
 import { Counter } from './counter.js';
-import { COLUMN_ELEMENT_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants.js';
+import { COLUMN_ELEMENT_SELECTOR, CONTACT_DELETE_BTN, CONTACT_EDIT_BTN, CONTACT_TABLE, CONTACTS_OPEN_SELECTOR, CONTACTS_SELECTOR, COUNTER_SELECTOR, ELEMENT_MESSAGE_SELECTOR, ELEMENT_SELECTOR, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR, MESSAGE_SELECTOR, MESSAGE_TEMPLATE_SELECTOR } from './constants.js';
 import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager.js';
 import { openEditPopup } from './edit-form.js';
-// import { openEditPopup } from './search-modal.js';
 
 const counters = {}; // Хранилище для счетчиков
 
 function renderContactElement(name, position, phone) {
-  const letterTemplate = document.querySelector('#message').content.querySelector('.message');
+  const letterTemplate = document.querySelector(MESSAGE_TEMPLATE_SELECTOR).content.querySelector(MESSAGE_SELECTOR);
   const contactElement = letterTemplate.cloneNode(true);
   contactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent = name;
   contactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent = position;
@@ -57,7 +56,7 @@ function addContact(name, position, phone, letterElement, shouldSave = true) {
 }
 
 function deleteContact(event) {
-  const contactMessage = event.target.closest('.message');
+  const contactMessage = event.target.closest(MESSAGE_SELECTOR);
   const name = contactMessage.querySelector(MESSAGE_NAME_SELECTOR).textContent;
   const position = contactMessage.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
   const phone = contactMessage.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
@@ -78,7 +77,7 @@ function updateContact(oldContact, newContact) {
 
   if (letterElement) {
     const contactsContainer = letterElement.querySelector(CONTACTS_SELECTOR);
-    const contactElements = contactsContainer.querySelectorAll('.element__message');
+    const contactElements = contactsContainer.querySelectorAll(ELEMENT_MESSAGE_SELECTOR);
 
     contactElements.forEach((contact) => {
       const contactName = contact.querySelector(MESSAGE_NAME_SELECTOR).textContent;
@@ -96,12 +95,12 @@ function updateContact(oldContact, newContact) {
 
 function openContactInfo(event) {
   if (event.target.closest(COLUMN_ELEMENT_SELECTOR)) {
-    const currentBtn = event.target.closest('.element');
+    const currentBtn = event.target.closest(ELEMENT_SELECTOR);
     const currentContent = currentBtn.querySelector(CONTACTS_SELECTOR);
 
-    currentContent.classList.toggle('element__contacts--open');
+    currentContent.classList.toggle(CONTACTS_OPEN_SELECTOR);
 
-    if (currentContent.classList.contains('element__contacts--open')) {
+    if (currentContent.classList.contains(CONTACTS_OPEN_SELECTOR)) {
       currentContent.style.maxHeight = `${currentContent.scrollHeight}px`;
     } else {
       currentContent.style.maxHeight = 0;
@@ -109,15 +108,15 @@ function openContactInfo(event) {
   }
 }
 
-document.querySelector('.contact-table').addEventListener('click', (e) => {
+document.querySelector(CONTACT_TABLE).addEventListener('click', (e) => {
 
-  if (e.target.closest('.js-delete-contact-button')) {
+  if (e.target.closest(CONTACT_DELETE_BTN)) {
     deleteContact(e);
     return;
   }
 
-  if (e.target.closest('.js-edit-contact-button')) {
-    const contactElement = e.target.closest('.message');
+  if (e.target.closest(CONTACT_EDIT_BTN)) {
+    const contactElement = e.target.closest(MESSAGE_SELECTOR);
     openEditPopup(contactElement);
     return;
   }
@@ -125,17 +124,17 @@ document.querySelector('.contact-table').addEventListener('click', (e) => {
   openContactInfo(e);
 });
 
-document.querySelector('.contact-table').addEventListener('keydown', (evt) => {
+document.querySelector(CONTACT_TABLE).addEventListener('keydown', (evt) => {
   if (evt.keyCode === 32 || evt.key === 'Enter') {
     evt.preventDefault();
 
-    if (evt.target.matches('.js-delete-contact-button')) {
+    if (evt.target.matches(CONTACT_DELETE_BTN)) {
       deleteContact(evt);
       return;
     }
 
-    if (evt.target.matches('.js-edit-contact-button')) {
-      const contactElement = evt.target.closest('.message');
+    if (evt.target.matches(CONTACT_EDIT_BTN)) {
+      const contactElement = evt.target.closest(MESSAGE_SELECTOR);
       openEditPopup(contactElement);
       return;
     }

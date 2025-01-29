@@ -1,8 +1,9 @@
+import { MODAL_INPUT, MODAL_SEARCH_AREA, MODAL_SHOW_BTN, MODAL_TEMPLATE_SELECTOR } from './constants';
 import { renderContactElement } from './contact';
 import { getContacts, searchContacts } from './contact-manager';
 import { modal, openModal } from './modal';
 
-const searchModalTemplate = document.querySelector('#search-modal-content');
+const searchModalTemplate = document.querySelector(MODAL_TEMPLATE_SELECTOR);
 
 function displaySearchResults(results, area) {
   area.innerHTML = '';
@@ -34,17 +35,17 @@ function openSearchModal() {
   // const content = searchModalTemplate.content.cloneNode(true);
   openModal(searchModalTemplate);
 
-  const searchInput = modal.querySelector('.modal__input');
-  const searchArea = modal.querySelector('.modal__search-area');
+  const searchInput = modal.querySelector(MODAL_INPUT);
+  const searchArea = modal.querySelector(MODAL_SEARCH_AREA);
 
   listenSearchInput(searchInput, searchArea);
 
-  modal.querySelector('.modal__button-show').addEventListener('click', showAllContacts);
+  modal.querySelector(MODAL_SHOW_BTN).addEventListener('click', showAllContacts);
 }
 
 function showAllContacts() {
   const allContacts = getContacts(); // Получаем все контакты из localStorage
-  const searchArea = modal.querySelector('.modal__search-area');
+  const searchArea = modal.querySelector(MODAL_SEARCH_AREA);
   displaySearchResults(allContacts, searchArea);
   modal.querySelector('input').focus();
 }

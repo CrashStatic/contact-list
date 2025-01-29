@@ -60,22 +60,18 @@ function validatePhone(phone) {
 function validateForm(inputs, storage, errorMessage) {
   const [name, position, phone] = inputs;
 
-  // Сброс ошибок перед новой проверкой
   resetErrors(inputs, errorMessage);
 
-  // 1. Проверка на пустые поля
   const emptyFieldsErrors = validateEmptyFields(inputs);
   if (emptyFieldsErrors.length > 0) {
     return { ok: false, errors: emptyFieldsErrors };
   }
 
-  // 2. Проверка на уникальность контакта
   const uniquenessErrors = validateContactUniqueness(storage, name.value, position.value, phone.value);
   if (uniquenessErrors.length > 0) {
     return { ok: false, errors: uniquenessErrors };
   }
 
-  // 3. Проверка имени и должности на допустимые символы и длину
   const nameErrors = validateLetters(name, MINIMUM_LENGTH);
   if (nameErrors.length > 0) {
     return { ok: false, errors: nameErrors };
@@ -86,7 +82,6 @@ function validateForm(inputs, storage, errorMessage) {
     return { ok: false, errors: positionErrors };
   }
 
-  // 4. Проверка номера телефона
   const phoneErrors = validatePhone(phone);
   if (phoneErrors.length > 0) {
     return { ok: false, errors: phoneErrors };

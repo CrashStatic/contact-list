@@ -1,11 +1,11 @@
-import { MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR } from './constants';
+import { CONTACT_EDIT_BTN, EDIT_POPUP, EDIT_POPUP_ERROR, EDIT_POPUP_NAME, EDIT_POPUP_PHONE, EDIT_POPUP_POSITION, MESSAGE_NAME_SELECTOR, MESSAGE_PHONE_SELECTOR, MESSAGE_POSITION_SELECTOR, MODAL_TITLE } from './constants';
 import { updateContact } from './contact';
 import { getContacts, updateContactInStorage } from './contact-manager';
 import { closeModal, modal, onDocumentKeydown, openModal } from './modal';
 import { initPhoneInput } from './phone-mask';
 import { showError, validateForm } from './validat';
 
-const editPopupTemplate = document.querySelector('#edit-popup-content');
+const editPopupTemplate = document.querySelector(EDIT_POPUP);
 let popupNameInput;
 let popupPositionInput;
 let popupPhoneInput;
@@ -15,15 +15,15 @@ let currentContactElement = null; // Контакт, который редакт
 function openEditPopup(contactElement) {
   openModal(editPopupTemplate);
 
-  const editTitle = modal.querySelector('.modal__title');
+  const editTitle = modal.querySelector(MODAL_TITLE);
   editTitle.textContent = 'Edit contact';
 
   currentContactElement = contactElement;
 
   // Заполняем поля данными контакта
-  popupNameInput = modal.querySelector('#popup-name');
-  popupPositionInput = modal.querySelector('#popup-position');
-  popupPhoneInput = modal.querySelector('#popup-phone');
+  popupNameInput = modal.querySelector(EDIT_POPUP_NAME);
+  popupPositionInput = modal.querySelector(EDIT_POPUP_POSITION);
+  popupPhoneInput = modal.querySelector(EDIT_POPUP_PHONE);
 
   popupNameInput.value = contactElement.querySelector(MESSAGE_NAME_SELECTOR).textContent;
   popupPositionInput.value = contactElement.querySelector(MESSAGE_POSITION_SELECTOR).textContent;
@@ -43,7 +43,7 @@ function saveEditPopup() {
   const oldPhone = currentContactElement.querySelector(MESSAGE_PHONE_SELECTOR).textContent;
 
   const inputs = [popupNameInput, popupPositionInput, popupPhoneInput];
-  const errorMessage = document.querySelector('.popup__error');
+  const errorMessage = document.querySelector(EDIT_POPUP_ERROR);
 
   initPhoneInput(popupPhoneInput);
 
@@ -73,7 +73,7 @@ function saveEditPopup() {
 
   // Возвращаем фокус на редактируемый контакт - на кнопку редактирования
   if (currentContactElement) {
-    const editButton = currentContactElement.querySelector('.js-edit-contact-button');
+    const editButton = currentContactElement.querySelector(CONTACT_EDIT_BTN);
     if (editButton) {
       editButton.focus();
     }

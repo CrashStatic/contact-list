@@ -1,3 +1,5 @@
+import { COUNTER_ACTIVE_SELECTOR, ELEMENT_ACTIVE_SELECTOR } from './constants';
+
 class Counter {
   constructor(counterElement, contactsContainer) {
     this.counterElement = counterElement;
@@ -26,12 +28,11 @@ class Counter {
     const element = this.contactsContainer.parentElement;
 
     if (this.count > 0) {
-      this.counterElement.classList.add('element__counter--active');
-      element.classList.add('element--active');
+      this.counterElement.classList.add(COUNTER_ACTIVE_SELECTOR);
+      element.classList.add(ELEMENT_ACTIVE_SELECTOR);
     } else {
-      this.counterElement.classList.remove('element__counter--active');
-      element.classList.remove('element--active');
-      // this.counterElement.textContent = 0;
+      this.counterElement.classList.remove(COUNTER_ACTIVE_SELECTOR);
+      element.classList.remove(ELEMENT_ACTIVE_SELECTOR);
     }
 
     this.counterElement.textContent = this.count;
