@@ -40,15 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // if (typeof name === 'string' && name.length > 0) {
-  //   const firstLetter = name[0].toUpperCase();
-  //   const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR) as HTMLElement;
-
-  //   if (letterElement) {
-  //     addContact({ name, position, phone }, letterElement, false);
-  //   }
-  // }
-
   initPhoneInput(phoneInput);
 
   // Обработка кликов внутри модального окна
@@ -67,15 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
       deleteContact(e);
       return;
     }
-
-    // if (target.closest('.js-edit-contact-button')) {
-    //   const contactElement = target.closest('.message') as ContactInfo | null;
-
-    //   if (contactElement) {
-    //     openEditPopup(contactElement);
-    //   }
-    //   return;
-    // }
 
     if (target.closest(CONTACT_EDIT_BTN)) {
       const contactElement = target.closest(MESSAGE_SELECTOR) as HTMLElement;

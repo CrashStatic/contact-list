@@ -23,9 +23,16 @@
   ],
   "overrides": [
     {
+      "files": ["*.ts", "*.tsx"], // Применяем настройки только к TypeScript файлам
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      }
+    },
+    {
       "files": ["gulpfile.js", "svgo.config.js"],
+      "parser": "espree",  // Применяем стандартный парсер для gulpfile.js
       "rules": {
-        "no-unused-vars": "off", // Например, отключить все правила для gulpfile.js
+        "no-unused-vars": "off",
         "no-undef": "off"
       }
     }
