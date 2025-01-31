@@ -1,0 +1,1 @@
+var i=n=>{let l="";n.addEventListener("input",()=>{let t=n.value.replace(/\D/g,"");if(t.length<l.length){l=t;return}t.length===1&&t[0]!=="7"&&(t=`7${t}`);let e="+7 ";t.length>1&&(e+=t.substring(1,4)),t.length>4&&(e+=` ${t.substring(4,7)}`),t.length>7&&(e+=` ${t.substring(7,9)}`),t.length>9&&(e+=` ${t.substring(9,11)}`),n.value=e,l=t})};export{i as initPhoneInput};
