@@ -1,30 +1,32 @@
 import { BODY_SELECTOR, MODAL_BODY, MODAL_SELECTOR } from './constants';
 import { isEscapeKey } from './util';
 
-const modal = document.querySelector(MODAL_SELECTOR);
+const modal = document.querySelector(MODAL_SELECTOR) as HTMLDialogElement;
+const body = document.querySelector(BODY_SELECTOR) as HTMLElement;
 
-function openModal(template) {
+function openModal(template: HTMLTemplateElement) {
   modal.showModal();
-  document.querySelector(BODY_SELECTOR).style.overflow = 'hidden';
+  body.style.overflow = 'hidden';
 
-  const modalBody = modal.querySelector(MODAL_BODY);
+  const modalBody = modal.querySelector(MODAL_BODY) as HTMLElement;
   modalBody.innerHTML = '';
 
   const content = template.content.cloneNode(true);
   modalBody.appendChild(content);
 
-  modal.querySelector('input').focus();
+  const input = modal.querySelector('input') as HTMLInputElement;
+  input.focus();
 
   document.addEventListener('keydown', onDocumentKeydown);
 }
 
 function closeModal() {
   modal.close();
-  document.querySelector(BODY_SELECTOR).style.overflow = 'auto';
+  body.style.overflow = 'auto';
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-function onDocumentKeydown (evt) {
+function onDocumentKeydown (evt: KeyboardEvent) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModal();

@@ -1,8 +1,8 @@
-const initPhoneInput = (phone) => {
+const initPhoneInput = (phone: HTMLInputElement): void => {
   let oldValue = '';
 
   phone.addEventListener('input', () => {
-    let value = phone.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+    let value: string = phone.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
 
     // Если длина значения меньше предыдущего — это удаление, ничего не делаем
     if (value.length < oldValue.length) {

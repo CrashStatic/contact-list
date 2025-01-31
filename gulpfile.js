@@ -15,6 +15,10 @@ import svgo from 'gulp-svgmin';
 import { stacksvg } from 'gulp-stacksvg';
 import server from 'browser-sync';
 import bemlinter from 'gulp-html-bemlinter';
+import gulpTypescript from 'gulp-typescript';
+
+// Создание проекта TypeScript с настройками из tsconfig.json
+const tsProject = gulpTypescript.createProject('tsconfig.json');
 
 const { src, dest, watch, series, parallel } = gulp;
 const sass = gulpSass(dartSass);
@@ -73,14 +77,23 @@ export function processStyles () {
     .pipe(server.stream());
 }
 
-export function processScripts () {
+// Таск для компиляции TypeScript в JavaScript
+export function processTypescripts() {
+  return src(`${PATH_TO_SOURCE}scripts/**/*.ts`) // Указание пути к .ts файлам
+    .pipe(tsProject()) // Компиляция в соответствии с tsconfig.json
+    .pipe(dest(`${PATH_TO_DIST}scripts`)); // Вывод в папку dist/scripts
+}
+
+export function processScripts() {
   const gulpEsbuild = createGulpEsbuild({ incremental: isDevelopment });
 
-  return src(`${PATH_TO_SOURCE}scripts/*.js`)
+  return src([
+    `${PATH_TO_SOURCE}scripts/**/*.js`, // JavaScript файлы
+    `${PATH_TO_SOURCE}scripts/**/*.ts` // TypeScript файлы
+  ])
     .pipe(gulpEsbuild({
       bundle: true,
       format: 'esm',
-      // splitting: true,
       platform: 'browser',
       minify: !isDevelopment,
       sourcemap: isDevelopment,
@@ -162,6 +175,7 @@ export function startServer () {
 
   watch(`${PATH_TO_SOURCE}**/*.{html,njk}`, series(processMarkup));
   watch(`${PATH_TO_SOURCE}styles/**/*.scss`, series(processStyles));
+  watch(`${PATH_TO_SOURCE}scripts/**/*.ts`, series(processTypescripts)); // Наблюдение за файлами TypeScript
   watch(`${PATH_TO_SOURCE}scripts/**/*.js`, series(processScripts));
   watch(`${PATH_TO_SOURCE}icons/**/*.svg`, series(createStack, reloadServer));
   watch(PATHS_TO_STATIC, series(reloadServer));

@@ -1,11 +1,12 @@
+import { ContactInfo } from '../types/contact';
 import { MODAL_INPUT, MODAL_SEARCH_AREA, MODAL_SHOW_BTN, MODAL_TEMPLATE_SELECTOR } from './constants';
 import { renderContactElement } from './contact';
 import { getContacts, searchContacts } from './contact-manager';
 import { modal, openModal } from './modal';
 
-const searchModalTemplate = document.querySelector(MODAL_TEMPLATE_SELECTOR);
+const searchModalTemplate = document.querySelector(MODAL_TEMPLATE_SELECTOR) as HTMLTemplateElement;
 
-function displaySearchResults(results, area) {
+function displaySearchResults(results: ContactInfo[], area: HTMLElement) {
   area.innerHTML = '';
 
   if (results.length === 0) {
@@ -14,12 +15,12 @@ function displaySearchResults(results, area) {
   }
 
   results.forEach(({ name, position, phone }) => {
-    const contactElement = renderContactElement(name, position, phone);
+    const contactElement = renderContactElement({ name, position, phone });
     area.appendChild(contactElement);
   });
 }
 
-function listenSearchInput(element, area) {
+function listenSearchInput(element: HTMLInputElement, area: HTMLElement) {
   element.addEventListener('input', () => {
     const query = element.value.trim().toLowerCase();
     if (query) {
@@ -32,22 +33,24 @@ function listenSearchInput(element, area) {
 }
 
 function openSearchModal() {
-  // const content = searchModalTemplate.content.cloneNode(true);
   openModal(searchModalTemplate);
 
-  const searchInput = modal.querySelector(MODAL_INPUT);
-  const searchArea = modal.querySelector(MODAL_SEARCH_AREA);
+  const searchInput = modal.querySelector(MODAL_INPUT) as HTMLInputElement;
+  const searchArea = modal.querySelector(MODAL_SEARCH_AREA) as HTMLElement;
 
   listenSearchInput(searchInput, searchArea);
 
-  modal.querySelector(MODAL_SHOW_BTN).addEventListener('click', showAllContacts);
+  const showButton = modal.querySelector(MODAL_SHOW_BTN) as HTMLButtonElement;
+  showButton.addEventListener('click', showAllContacts);
 }
 
 function showAllContacts() {
   const allContacts = getContacts(); // Получаем все контакты из localStorage
-  const searchArea = modal.querySelector(MODAL_SEARCH_AREA);
+  const searchArea = modal.querySelector(MODAL_SEARCH_AREA) as HTMLElement;
   displaySearchResults(allContacts, searchArea);
-  modal.querySelector('input').focus();
+
+  const input = modal.querySelector('input') as HTMLInputElement;
+  input.focus();
 }
 
 export { openSearchModal, showAllContacts };

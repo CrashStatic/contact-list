@@ -1,4 +1,6 @@
-const ALPHABET_A_M = [
+import { Letter } from '../types/letter';
+
+const ALPHABET_A_M: Letter[] = [
   {
     letter: 'A',
     id: 'a'
@@ -53,7 +55,7 @@ const ALPHABET_A_M = [
   },
 ];
 
-const ALPHABET_N_Z = [
+const ALPHABET_N_Z: Letter[] = [
   {
     letter: 'N',
     id: 'n'

@@ -23,19 +23,23 @@
     "lint:html": "linthtml source/**/*.html --config .linthtmlrc",
     "lint:bem": "gulp lintBem --silent",
     "lint:styles": "stylelint \"source/styles/**/*.scss\"",
-    "lint:scripts": "eslint . --ignore-path .gitignore --ignore-pattern vendor/",
+    "lint:scripts": "eslint . --ignore-path .gitignore --ignore-pattern vendor/ --ext .js,.ts",
     "optimize": "npm-run-all -p optimize:**",
     "optimize:raster": "gulp optimizeRaster",
-    "optimize:vector": "gulp optimizeVector"
+    "optimize:vector": "gulp optimizeVector",
+    "tsc": "tsc --project tsconfig.json",
+    "dev": "gulp runDev"
   },
   "devDependencies": {
     "@htmlacademy/editorconfig-cli": "3.0.0",
     "@linthtml/linthtml": "0.9.6",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
     "browser-sync": "3.0.2",
     "browserslist-to-esbuild": "2.1.1",
     "eslint": "8.57.0",
     "eslint-config-htmlacademy": "10.0.1",
-    "gulp": "4.0.2",
+    "gulp": "^4.0.2",
     "gulp-esbuild": "0.12.0",
     "gulp-html-bemlinter": "4.0.0",
     "gulp-htmlmin": "5.0.1",
@@ -45,6 +49,7 @@
     "gulp-sharp-responsive": "0.4.1",
     "gulp-stacksvg": "4.0.0",
     "gulp-svgmin": "4.1.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "linthtml-config-htmlacademy": "1.0.25",
     "npm-run-all": "4.1.5",
     "postcss": "8.4.38",
@@ -53,6 +58,7 @@
     "sass": "1.77.4",
     "stylelint": "16.6.1",
     "stylelint-config-htmlacademy": "4.2.3",
+    "typescript": "^5.7.3",
     "w3c-html-validator": "1.8.1"
   }
 }

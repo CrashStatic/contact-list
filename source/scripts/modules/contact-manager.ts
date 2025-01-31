@@ -1,22 +1,24 @@
-import { loadContacts, saveContacts } from './local-storage.js';
-const LOCAL_STORAGE_KEY = 'contacts';
+import { ContactInfo } from '../types/contact';
+import { loadContacts, saveContacts } from './local-storage';
+
+const LOCAL_STORAGE_KEY: string = 'contacts';
 
 // Инициализируем контакты из localStorage
-let contactsStorage = loadContacts(LOCAL_STORAGE_KEY) || [];
+let contactsStorage: ContactInfo[] = loadContacts(LOCAL_STORAGE_KEY) || [];
 
 // Получаем все контакты (геттер)
-function getContacts() {
+function getContacts(): ContactInfo[] {
   return contactsStorage;
 }
 
-function addContactToStorage(name, position, phone) {
+function addContactToStorage({ name, position, phone }: ContactInfo): void {
   const newContact = { name, position, phone };
   contactsStorage.push(newContact);
 
   saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
-function deleteContactToStorage(name, position, phone) {
+function deleteContactToStorage({ name, position, phone }: ContactInfo): void {
   contactsStorage = contactsStorage.filter(
     (contact) => contact.name !== name || contact.position !== position || contact.phone !== phone
   );
@@ -24,7 +26,7 @@ function deleteContactToStorage(name, position, phone) {
   saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
-function searchContacts(query) {
+function searchContacts(query: string): ContactInfo[] {
   return contactsStorage.filter(
     ({ name, position, phone }) =>
       name.toLowerCase().includes(query.toLowerCase()) ||
@@ -33,7 +35,7 @@ function searchContacts(query) {
   );
 }
 
-function updateContactInStorage(oldContact, newContact) {
+function updateContactInStorage(oldContact: ContactInfo, newContact: ContactInfo): void {
   contactsStorage = contactsStorage.map((contact) =>
     contact.name === oldContact.name && contact.position === oldContact.position && contact.phone === oldContact.phone
       ? newContact
@@ -43,7 +45,7 @@ function updateContactInStorage(oldContact, newContact) {
   saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
 }
 
-function clearAllContactsInStorage() {
+function clearAllContactsInStorage(): void {
   contactsStorage = [];
 
   saveContacts(LOCAL_STORAGE_KEY, contactsStorage);
