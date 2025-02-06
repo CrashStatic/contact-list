@@ -1,7 +1,12 @@
 import { Letter } from '../types/letter';
 import { ELEMENT_SELECTOR, LETTER_SELECTOR, LETTER_TEMPLATE_SELECTOR } from './constants';
 
-const letterTemplate = document.querySelector(LETTER_TEMPLATE_SELECTOR) as HTMLTemplateElement;
+const letterTemplate: HTMLTemplateElement | null = document.querySelector(LETTER_TEMPLATE_SELECTOR);
+
+if (!letterTemplate) {
+  throw new Error(`Template with selector ${LETTER_TEMPLATE_SELECTOR} not found.`);
+}
+
 const content = letterTemplate.content.querySelector(ELEMENT_SELECTOR);
 
 const getLetter = ({ letter, id }: Letter): HTMLElement => {
@@ -17,7 +22,7 @@ const getLetter = ({ letter, id }: Letter): HTMLElement => {
   return letterElement;
 };
 
-const createColumn = (alphabet: Letter[], container: HTMLElement): void => {
+const createColumn = (alphabet: Letter[], container: HTMLElement) => {
   const fragmentElement = document.createDocumentFragment();
   alphabet.forEach((element) => {
     const letter = getLetter(element);
