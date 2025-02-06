@@ -1,18 +1,19 @@
 import { ContactInfo } from '../types/contact';
 
 // Загрузка контактов из localStorage
-function loadContacts(key: string): ContactInfo[] | null {
+function loadContacts(key: string): ContactInfo[] {
   const savedContacts = localStorage.getItem(key);
   if (savedContacts) {
     try {
-      return JSON.parse(savedContacts) as ContactInfo[];
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : [];
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Ошибка парсинга данных из localStorage:', error);
       throw new Error('Ошибка парсинга данных из localStorage');
     }
   }
-  return null;
+  return [];
 }
 
 // Сохранение контактов в localStorage

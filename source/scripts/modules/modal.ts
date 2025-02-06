@@ -1,5 +1,5 @@
 import { BODY_SELECTOR, MODAL_BODY, MODAL_SELECTOR } from './constants';
-import { isEscapeKey } from './util';
+import { isEscapeKey } from './utils';
 
 const modal = document.querySelector(MODAL_SELECTOR) as HTMLDialogElement;
 const body = document.querySelector(BODY_SELECTOR) as HTMLElement;

@@ -1,5 +1,7 @@
 import { ContactInfo } from '../types/contact';
 import { Error } from '../types/error';
+import {Validate} from '../types/validate';
+import {FormValidate} from '../types/form-validate';
 
 const MINIMUM_LENGTH: number = 3;
 
@@ -60,40 +62,40 @@ function validatePhone(phone: HTMLInputElement): Error[] {
     : [];
 }
 
-function validateForm(inputs: HTMLInputElement[], storage: ContactInfo[], errorMessage: HTMLElement): {ok: boolean; errors: Error[]} {
+function validateForm({inputs, storage, errorMessage}: FormValidate): Validate {
   const [name, position, phone] = inputs;
 
   resetErrors(inputs, errorMessage);
 
   const emptyFieldsErrors = validateEmptyFields(inputs);
   if (emptyFieldsErrors.length > 0) {
-    return { ok: false, errors: emptyFieldsErrors };
+    return { isValid: false, errors: emptyFieldsErrors };
   }
 
   const contactToValidate: ContactInfo = { name: name.value, position: position.value, phone: phone.value };
 
   const uniquenessErrors = validateContactUniqueness(storage, contactToValidate);
   if (uniquenessErrors.length > 0) {
-    return { ok: false, errors: uniquenessErrors };
+    return { isValid: false, errors: uniquenessErrors };
   }
 
   const nameErrors = validateLetters(name, MINIMUM_LENGTH);
   if (nameErrors.length > 0) {
-    return { ok: false, errors: nameErrors };
+    return { isValid: false, errors: nameErrors };
   }
 
   const positionErrors = validateLetters(position, MINIMUM_LENGTH);
   if (positionErrors.length > 0) {
-    return { ok: false, errors: positionErrors };
+    return { isValid: false, errors: positionErrors };
   }
 
   const phoneErrors = validatePhone(phone);
   if (phoneErrors.length > 0) {
-    return { ok: false, errors: phoneErrors };
+    return { isValid: false, errors: phoneErrors };
   }
 
   // Если все проверки пройдены
-  return { ok: true, errors: [] };
+  return { isValid: true, errors: [] };
 }
 
 export { showError, validateForm };

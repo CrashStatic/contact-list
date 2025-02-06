@@ -16,6 +16,9 @@ function displaySearchResults(results: ContactInfo[], area: HTMLElement) {
 
   results.forEach(({ name, position, phone }) => {
     const contactElement = renderContactElement({ name, position, phone });
+    if (!contactElement) {
+      return;
+    }
     area.appendChild(contactElement);
   });
 }

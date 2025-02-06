@@ -1,5 +1,4 @@
 import { ContactInfo } from '../types/contact';
-import { Error } from '../types/error';
 import { CONTACT_EDIT_BTN,
   EDIT_POPUP,
   EDIT_POPUP_ERROR,
@@ -13,6 +12,7 @@ import { getContacts, updateContactInStorage } from './contact-manager';
 import { closeModal, modal, onDocumentKeydown, openModal } from './modal';
 import { initPhoneInput } from './phone-mask';
 import { showError, validateForm } from './validat';
+import {Validate} from '../types/validate';
 
 const editPopupTemplate = document.querySelector(EDIT_POPUP) as HTMLTemplateElement | null;
 let popupNameInput: HTMLInputElement | null;
@@ -75,9 +75,10 @@ function saveEditPopup() {
   }
 
   // Валидация
-  const { ok, errors }: { ok: boolean; errors: Error[] } = validateForm(inputs, getContacts(), errorMessage);
+  const storage: ContactInfo[] = getContacts();
+  const { isValid, errors }: Validate = validateForm({inputs, storage, errorMessage});
 
-  if (!ok) {
+  if (!isValid) {
     // Если есть ошибки, отображаем их
     errors.forEach(({ input, message }) => {
       if (input) {

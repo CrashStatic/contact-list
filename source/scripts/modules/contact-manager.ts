@@ -4,7 +4,7 @@ import { loadContacts, saveContacts } from './local-storage';
 const LOCAL_STORAGE_KEY: string = 'contacts';
 
 // Инициализируем контакты из localStorage
-let contactsStorage: ContactInfo[] = loadContacts(LOCAL_STORAGE_KEY) || [];
+let contactsStorage: ContactInfo[] = loadContacts(LOCAL_STORAGE_KEY);
 
 // Получаем все контакты (геттер)
 function getContacts(): ContactInfo[] {

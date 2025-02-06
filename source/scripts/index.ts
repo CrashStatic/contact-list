@@ -1,6 +1,6 @@
 import './modules/form-buttons';
 import { createColumn } from './modules/column';
-import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/mock';
+import { ALPHABET_A_M, ALPHABET_N_Z } from './modules/alphabet';
 import { phoneInput } from './modules/form-buttons';
 import { initPhoneInput } from './modules/phone-mask';
 import { getContacts } from './modules/contact-manager';
@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR) as HTMLElement;
 
     if (letterElement) {
-      addContact({name, position, phone}, letterElement, false);
+      const contact = {name, position, phone};
+      addContact({ contact, letterElement});
     }
   });
 

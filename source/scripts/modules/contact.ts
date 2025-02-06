@@ -16,27 +16,31 @@ import { COLUMN_ELEMENT_SELECTOR,
 import { addContactToStorage, deleteContactToStorage, getContacts } from './contact-manager';
 import { openEditPopup } from './edit-form';
 import { ContactInfo } from '../types/contact';
+import {AddContactParams} from '../types/add-contact';
 
 const counters: { [key: string]: Counter} = {}; // Хранилище для счетчиков
 
-
-function renderContactElement({ name, position, phone }: ContactInfo): HTMLElement {
+function renderContactElement({ name, position, phone }: ContactInfo) {
   const letterTemplate = document.querySelector(MESSAGE_TEMPLATE_SELECTOR) as HTMLTemplateElement;
   const content = letterTemplate.content.querySelector(MESSAGE_SELECTOR);
 
   const contactElement = content?.cloneNode(true) as HTMLElement;
 
-  if (contactElement) {
-    const nameElement = contactElement.querySelector(MESSAGE_NAME_SELECTOR) as HTMLElement;
-    const positionElement = contactElement.querySelector(MESSAGE_POSITION_SELECTOR) as HTMLElement;
-    const phoneElement = contactElement.querySelector(MESSAGE_PHONE_SELECTOR) as HTMLElement;
+  if (!contactElement) {
+    return;
+  }
+  const nameElement = contactElement.querySelector(MESSAGE_NAME_SELECTOR) as HTMLElement;
+  const positionElement = contactElement.querySelector(MESSAGE_POSITION_SELECTOR) as HTMLElement;
+  const phoneElement = contactElement.querySelector(MESSAGE_PHONE_SELECTOR) as HTMLElement;
 
-    // Обновляем все поля для нового контакта
-    nameElement.textContent = name;
-    positionElement.textContent = position;
-    phoneElement.textContent = phone;
+  if (!nameElement || !positionElement || !phoneElement) {
+    return null;
   }
 
+  // Обновляем все поля для нового контакта
+  nameElement.textContent = name;
+  positionElement.textContent = position;
+  phoneElement.textContent = phone;
   return contactElement;
 }
 
@@ -44,6 +48,9 @@ function renderContacts(contacts: ContactInfo[], container: HTMLElement) {
   container.innerHTML = '';
   contacts.forEach(({ name, position, phone }) => {
     const contactElement = renderContactElement({ name, position, phone });
+    if (!contactElement) {
+      return;
+    }
     container.append(contactElement);
   });
 }
@@ -68,16 +75,16 @@ function renderColumn(letter: string, contacts: ContactInfo[]): void {
   }
 }
 
-function addContact({ name, position, phone }: ContactInfo, letterElement: HTMLElement, shouldSave: boolean = true): void {
+function addContact({ contact, letterElement, shouldSave = true }: AddContactParams): void {
   // Если необходимо, добавляем контакт в хранилище
   if (shouldSave) {
-    addContactToStorage({name, position, phone});
+    addContactToStorage(contact);
   }
 
   const letter = letterElement.querySelector('[data-id]')?.textContent?.toUpperCase() ?? '';
 
   // Обновляем колонку, фильтруем контакты по первой букве имени
-  const updatedContacts = getContacts().filter((contact) => contact.name[0].toUpperCase() === letter);
+  const updatedContacts = getContacts().filter((item) => item.name[0].toUpperCase() === letter);
   renderColumn(letter, updatedContacts);
 }
 
@@ -181,16 +188,16 @@ document.querySelector(CONTACT_TABLE)?.addEventListener('click', (e: Event) => {
   openContactInfo(e);
 });
 
-document.querySelector(CONTACT_TABLE)?.addEventListener('keydown', (evt: Event) => {
-  const keyboardEvent = evt as KeyboardEvent;
+document.querySelector(CONTACT_TABLE)?.addEventListener('keydown', (event: Event) => {
+  const keyboardEvent = event as KeyboardEvent;
 
   if (keyboardEvent.key === ' ' || keyboardEvent.key === 'Enter') {
-    evt.preventDefault();
+    event.preventDefault();
 
-    const target = evt.target as Element;
+    const target = event.target as Element;
 
     if (target.matches(CONTACT_DELETE_BTN)) {
-      deleteContact(evt);
+      deleteContact(event);
       return;
     }
 
@@ -207,7 +214,7 @@ document.querySelector(CONTACT_TABLE)?.addEventListener('keydown', (evt: Event) 
       openEditPopup(contactInfo);
     }
 
-    openContactInfo(evt);
+    openContactInfo(event);
   }
 });
 

@@ -14,7 +14,8 @@ import { COLUMN_ELEMENT_SELECTOR,
 import { addContact } from './contact.js';
 import { clearAllContactsInStorage, getContacts } from './contact-manager.js';
 import { openSearchModal } from './search.js';
-import { Error } from '../types/error.js';
+import {ContactInfo} from '../types/contact';
+import {Validate} from '../types/validate';
 
 const nameInput = document.getElementById(FORM_NAME_ID) as HTMLInputElement;
 const positionInput = document.getElementById(FORM_POSITION_ID) as HTMLInputElement;
@@ -29,9 +30,10 @@ function addContactToList(): void {
   const inputs = [nameInput, positionInput, phoneInput];
 
   // Валидация
-  const { ok, errors }: { ok: boolean; errors: Error[] } = validateForm(inputs, getContacts(), errorMessage);
+  const storage: ContactInfo[] = getContacts();
+  const { isValid, errors }: Validate = validateForm({inputs, storage, errorMessage});
 
-  if (!ok) {
+  if (!isValid) {
     // Если есть ошибки, отображаем их
     errors.forEach(({ input, message }) => {
       if (input) {
@@ -46,7 +48,8 @@ function addContactToList(): void {
   const firstLetter = name[0].toUpperCase(); // Извлекаем первую букву имени
   const letterElement = document.querySelector(`[data-id="${firstLetter.toLowerCase()}"]`)?.closest(COLUMN_ELEMENT_SELECTOR) as HTMLElement;
 
-  addContact({ name, position, phone }, letterElement);
+  const contact = {name, position, phone};
+  addContact({ contact, letterElement});
 
   nameInput.value = '';
   positionInput.value = '';
