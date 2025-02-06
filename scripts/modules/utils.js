@@ -1,1 +1,1 @@
-var o=e=>e.key==="Escape";export{o as isEscapeKey};
+var s=e=>e.key==="Escape";export{s as isEscapeKey};
