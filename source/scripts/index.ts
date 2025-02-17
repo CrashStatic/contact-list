@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (letterElement) {
       const contact = {name, position, phone};
-      addContact({ contact, letterElement});
+      addContact({ contact, letterElement, shouldSave: false});
     }
   });
 
